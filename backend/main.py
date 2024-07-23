@@ -10,9 +10,6 @@ CORS(app)
 
 load_dotenv()
 
-if __name__ == "__main__":
-  app.run(debug=True)
-
 app.config['MONGO_URI'] = os.getenv("MONGO_DB_URI")
 mongo = PyMongo(app)
 
@@ -20,6 +17,12 @@ def mongo_to_json(doc):
   doc['_id'] = str(doc['_id'])
   return doc
 
+
+@app.route("/", methods=["GET"])
+def get_workouts():
+  workouts = mongo.db.workouts.find()
+  workouts_list = [mongo_to_json(workout) for workout in workouts]
+  return jsonify(workouts_list)
 
 @app.route("/", methods=["POST"])
 def add_workout(): 
@@ -29,3 +32,6 @@ def add_workout():
     return "Success!"
   else:
     return "Error!"
+  
+if __name__ == "__main__":
+  app.run(debug=True)
