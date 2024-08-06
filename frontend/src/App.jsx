@@ -30,7 +30,7 @@ function App() {
         Recent Workouts
       </Box>
       {workouts.length > 0 ? (
-        <WorkoutCards workout={workouts[0]}/>
+        <WorkoutCards workouts={workouts}/>
         ) : (
           <p>Getting workout history...</p>
         )
