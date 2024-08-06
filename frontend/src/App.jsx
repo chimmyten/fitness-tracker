@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Tabs, Tab, Box, TextField, Button } from '@mui/material';
+import { Tabs, Tab, Box, TextField, Button, Card, CardContent, Typography } from '@mui/material';
 
 function App() {
 
@@ -61,12 +61,12 @@ function WorkoutForm() {
   };
 
   return (
-    <Box>
+    <Box marginBottom={2}>
       <Tabs value={selectedTab} onChange={handleChange}>
         <Tab label="Run" />
         <Tab label="Weights" />
       </Tabs>
-      <Box marginTop={2}>
+      <Box marginTop={1}>
         {renderForm()}
       </Box>
     </Box>
@@ -77,25 +77,45 @@ function WorkoutCard({ workout }) {
 
   const dateAndType = `${workout.date} ${workout.type}`
 
-  return (
-    <div className="workout-card">
-      {dateAndType}
-      {workout.type == "Run" ? (
+  const card = (workout) => {
+    switch(workout.type){
+      case "Run":
+        return (
+          <>
+            <CardContent>
+              <Typography sx={{fontSize: 25, fontWeight: "bold", marginBottom: 2}}> 
+                {dateAndType}
+              </Typography>
+              <Typography sx={{marginBottom: 1, fontSize: 20}}>
+                Distance: {workout.distance}
+              </Typography>
+              <Typography sx={{ fontSize: 20}}>
+                Duration: {workout.duration}
+              </Typography>
+            </CardContent>
+          </>
+        )
+      case "Weights":
         <>
-          <p>
-            Distance: {workout.distance}
-          </p>
-          <p>
-            Time: {workout.duration}
-          </p>
-        </> 
-      ) :
-      (
-        <p>
-          Exercises: {workout.exercises}
-        </p>
-      )}
-    </div>
+          <CardContent>
+            <Typography sx={{fontSize: 20, fontWeight: "bold", marginBottom: 2}}> 
+              {dateAndType}
+            </Typography>
+            <Typography sx={{marginBottom: 1, fontSize: 20}}>
+              Exercises: {workout.exercises}
+            </Typography>
+            <Button size="small">Details</Button>
+          </CardContent>
+        </>
+    }
+  }
+
+  return (
+    <Box sx={{ display: 'inline-block', minWidth: '225px'}}>
+      <Card variant="outlined">
+        {card(workout)}
+      </Card>
+    </Box>
   )
 }
 
