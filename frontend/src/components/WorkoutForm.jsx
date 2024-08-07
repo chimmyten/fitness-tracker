@@ -6,11 +6,28 @@ export default function WorkoutForm() {
   const [selectedTab, setSelectedTab] = useState(0);
   const [formData, setFormData] = useState({
     date: "",
-    type: "",
+    type: "Run",
   });
+
+  const workoutTypeMap = (num) => {
+    switch (num) {
+      case 0:
+        return "Run";
+
+      case 1:
+        return "Weights";
+
+      default:
+        return "Run";
+    }
+  };
 
   const handleChange = (event, newValue) => {
     setSelectedTab(newValue);
+    setFormData({
+      ...formData,
+      type: workoutTypeMap(newValue),
+    });
   };
 
   const handleFormChange = (event) => {
@@ -28,7 +45,13 @@ export default function WorkoutForm() {
       case 0:
         return (
           <form>
-            <DatePicker name="date" onChange={handleFormChange} />
+            <DatePicker
+              name="date"
+              onChange={(newValue) => {
+                setFormData({ ...formData, date: newValue.format("YYYY-MM-DD") });
+              }}
+              sx={{ marginTop: 1 }}
+            />
             <TextField
               name="distance"
               label="Distance (km)"
@@ -53,7 +76,11 @@ export default function WorkoutForm() {
       case 1:
         return (
           <form>
-            <DatePicker name="date" onChange={handleFormChange} />
+            <DatePicker name="date"
+              onChange={(newValue) => {
+                setFormData({ ...formData, date: newValue.format("YYYY-MM-DD") });
+              }}
+              sx={{ marginTop: 1 }} />
             <TextField
               name="muscles"
               label="Muscles"
@@ -83,8 +110,8 @@ export default function WorkoutForm() {
   return (
     <Box marginBottom={2}>
       <Tabs value={selectedTab} onChange={handleChange}>
-        <Tab label="Run" />
-        <Tab label="Weights" />
+        <Tab name="type" label="Run" />
+        <Tab name="type" label="Weights" />
       </Tabs>
       <Box marginTop={1}>{renderForm()}</Box>
     </Box>
