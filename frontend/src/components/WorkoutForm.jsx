@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Tabs, Tab, Box, TextField, Button } from "@mui/material";
+import { Tabs, Tab, Box, TextField, Button, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { postWorkout } from "../api/workoutsApi";
 
 export default function WorkoutForm() {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -8,6 +9,7 @@ export default function WorkoutForm() {
     date: "",
     type: "Run",
   });
+  const [formSuccess, setFormSuccess] = useState(false);
 
   const workoutTypeMap = (num) => {
     switch (num) {
@@ -28,6 +30,7 @@ export default function WorkoutForm() {
       ...formData,
       type: workoutTypeMap(newValue),
     });
+    setFormSuccess(false);
   };
 
   const handleFormChange = (event) => {
@@ -40,11 +43,25 @@ export default function WorkoutForm() {
 
   console.log(formData);
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const submission = postWorkout(formData);
+
+    if (submission) {
+      setFormSuccess(true);
+    } else {
+      setFormSuccess(false);
+    }
+
+    setFormData({});
+  };
+
   const renderForm = () => {
     switch (selectedTab) {
       case 0:
         return (
-          <form>
+          <form onSubmit={handleSubmit}>
             <DatePicker
               name="date"
               onChange={(newValue) => {
@@ -54,7 +71,7 @@ export default function WorkoutForm() {
             />
             <TextField
               name="distance"
-              label="Distance (km)"
+              label="Distance"
               variant="outlined"
               fullWidth
               margin="normal"
@@ -62,25 +79,30 @@ export default function WorkoutForm() {
             />
             <TextField
               name="duration"
-              label="Time (minutes)"
+              label="Time"
               variant="outlined"
               fullWidth
               margin="normal"
               onChange={handleFormChange}
             />
-            <Button variant="contained" color="primary">
-              Add Run
-            </Button>
+            <Box sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
+              <Button type="submit" variant="contained" color="primary">
+                Add Run
+              </Button>
+              {formSuccess && <Typography sx={{ color: "green" }}>Workout Added!</Typography>}
+            </Box>
           </form>
         );
       case 1:
         return (
-          <form>
-            <DatePicker name="date"
+          <form onSubmit={handleSubmit}>
+            <DatePicker
+              name="date"
               onChange={(newValue) => {
                 setFormData({ ...formData, date: newValue.format("YYYY-MM-DD") });
               }}
-              sx={{ marginTop: 1 }} />
+              sx={{ marginTop: 1 }}
+            />
             <TextField
               name="muscles"
               label="Muscles"
@@ -97,9 +119,12 @@ export default function WorkoutForm() {
               margin="normal"
               onChange={handleFormChange}
             />
-            <Button variant="contained" color="primary">
-              Add Weights
-            </Button>
+            <Box sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
+              <Button type="submit" variant="contained" color="primary">
+                Add Weights
+              </Button>
+              {formSuccess && <Typography sx={{ color: "green" }}>Workout Added!</Typography>}
+            </Box>
           </form>
         );
       default:
