@@ -1,7 +1,21 @@
-const fetchWorkouts = async () => {
-  const response = await fetch("http://127.0.0.1:8000/");
-  const data = await response.json();
-  return data;
+const fetchWorkouts = async (workoutType) => {
+  const queryParams = new URLSearchParams({
+    type: workoutType
+  });
+  const queryParamString = queryParams.toString();
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/workouts?${queryParamString}`);
+    
+    if (response.ok) {
+      console.log(`${workoutType} workouts fetched`);
+      const data = await response.json();
+      return data;
+    } else {
+      console.error(`Error fetching ${workoutType} workouts`);
+    }
+  } catch (error) {
+    console.error(`Error fetching ${workoutType} workouts: ${error}`);
+  }
 };
 
 const postWorkout = async (formData) => {

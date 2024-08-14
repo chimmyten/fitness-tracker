@@ -7,6 +7,7 @@ export default function WorkoutForm({ selectedTab }) {
   const [formSuccess, setFormSuccess] = useState(false);
 
   const workoutTypeMap = (num) => {
+    console.log(num);
     switch (num) {
       case 0:
         return "Run";
@@ -19,10 +20,12 @@ export default function WorkoutForm({ selectedTab }) {
     }
   };
 
+
   const [formData, setFormData] = useState({
     date: "",
     type: workoutTypeMap(selectedTab),
   });
+
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
@@ -32,7 +35,6 @@ export default function WorkoutForm({ selectedTab }) {
     });
   };
 
-  console.log(formData);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
