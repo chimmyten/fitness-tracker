@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import WorkoutForm from "./components/WorkoutForm";
-import WorkoutCards from "./components/WorkoutCards";
+import WorkoutsTable from "./components/WorkoutsTable";
 import { fetchWorkouts } from "./api/workoutsApi";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -30,7 +30,7 @@ function App() {
         <WorkoutForm />
         <Box>
           <Box sx={{ fontSize: "1.6rem", marginBottom: 1.8 }}>Recently Added Workouts</Box>
-          {workouts.length > 0 ? <WorkoutCards workouts={workouts} /> : <p>Getting workout history...</p>}
+          {workouts.length > 0 ? <WorkoutsTable workouts={workouts} /> : <p>Getting workout history...</p>}
         </Box>
       </LocalizationProvider>
     </Box>
