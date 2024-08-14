@@ -1,6 +1,12 @@
-import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Typography, IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { deleteWorkout } from "../api/workoutsApi";
 
 export default function WorkoutCards({ workouts }) {
+  const handleDelete = async (workoutId) => {
+    console.log(workoutId);
+    deleteWorkout(workoutId)
+  }
   const card = (workout) => {
     const dateAndType = `${workout.date} ${workout.type}`;
 
@@ -50,8 +56,13 @@ export default function WorkoutCards({ workouts }) {
           <Card
             key={workout._id}
             variant="outlined"
-            sx={{ boxShadow: 2, pr: 1.5, transition: "transform 0.3s", "&:hover": { transform: "scale(1.025)" } }}
+            sx={{ boxShadow: 2, pr: 1.5, transition: "transform 0.3s", "&:hover": { transform: "scale(1.025)" }, position: "relative" }}
           >
+            <Box sx={{ position: "absolute", top: -5, right: -5}}>
+              <IconButton variant="outlined" onClick={() => {handleDelete(workout._id)}}>
+                <DeleteIcon />
+              </IconButton>
+            </Box>
             {card(workout)}
           </Card>
         );

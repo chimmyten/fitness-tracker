@@ -27,4 +27,23 @@ const postWorkout = async (formData) => {
   }
 };
 
-export { fetchWorkouts, postWorkout };
+const deleteWorkout = async (workoutId) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/${workoutId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+
+    if (response.ok) {
+      console.log(`Workout ${workoutId} deleted`);
+    } else {
+      console.error(`Failed to delete workout ${workoutId}`)
+    }
+  } catch (error) {
+    console.error(`Failed to delete workout ${workoutId}`)
+  }
+}
+
+export { fetchWorkouts, postWorkout, deleteWorkout };
