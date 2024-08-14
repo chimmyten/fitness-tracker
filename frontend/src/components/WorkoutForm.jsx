@@ -53,8 +53,6 @@ export default function WorkoutForm() {
     } else {
       setFormSuccess(false);
     }
-
-    setFormData({});
   };
 
   const renderForm = () => {
