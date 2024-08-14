@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Tabs, Tab } from "@mui/material";
 import WorkoutForm from "./components/WorkoutForm";
 import WorkoutsTable from "./components/WorkoutsTable";
 import { fetchWorkouts } from "./api/workoutsApi";
@@ -9,6 +9,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 function App() {
   const [workouts, setWorkouts] = useState([]);
+  const [selectedTab, setSelectedTab] = useState(0);
 
   useEffect(() => {
     const getWorkouts = async () => {
@@ -23,11 +24,19 @@ function App() {
     getWorkouts();
   }, []);
 
+  const handleChange = (event, newValue) => {
+    setSelectedTab(newValue);
+  };
+
   return (
     <Box>
       <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ backgroundColor: "#fff" }}>
         <h1>Fitness Tracker</h1>
-        <WorkoutForm />
+        <Tabs value={selectedTab} onChange={handleChange}>
+          <Tab name="type" label="Run" />
+          <Tab name="type" label="Weights" />
+        </Tabs>
+        <WorkoutForm selectedTab={selectedTab}/>
         <Box>
           <Box sx={{ fontSize: "1.6rem", marginBottom: 1.8 }}>Recently Added Workouts</Box>
           {workouts.length > 0 ? <WorkoutsTable workouts={workouts} /> : <p>Getting workout history...</p>}

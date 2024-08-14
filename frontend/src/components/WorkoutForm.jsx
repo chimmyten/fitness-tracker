@@ -1,14 +1,9 @@
 import { useState } from "react";
-import { Tabs, Tab, Box, TextField, Button, Typography } from "@mui/material";
+import { Box, TextField, Button, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { postWorkout } from "../api/workoutsApi";
 
-export default function WorkoutForm() {
-  const [selectedTab, setSelectedTab] = useState(0);
-  const [formData, setFormData] = useState({
-    date: "",
-    type: "Run",
-  });
+export default function WorkoutForm({ selectedTab }) {
   const [formSuccess, setFormSuccess] = useState(false);
 
   const workoutTypeMap = (num) => {
@@ -24,14 +19,10 @@ export default function WorkoutForm() {
     }
   };
 
-  const handleChange = (event, newValue) => {
-    setSelectedTab(newValue);
-    setFormData({
-      ...formData,
-      type: workoutTypeMap(newValue),
-    });
-    setFormSuccess(false);
-  };
+  const [formData, setFormData] = useState({
+    date: "",
+    type: workoutTypeMap(selectedTab),
+  });
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
@@ -132,10 +123,6 @@ export default function WorkoutForm() {
 
   return (
     <Box marginBottom={2}>
-      <Tabs value={selectedTab} onChange={handleChange}>
-        <Tab name="type" label="Run" />
-        <Tab name="type" label="Weights" />
-      </Tabs>
       <Box marginTop={1}>{renderForm()}</Box>
     </Box>
   );
