@@ -19,9 +19,11 @@ def mongo_to_json(doc):
   return doc
 
 
-@app.route("/", methods=["GET"])
+@app.route("/workouts", methods=["GET"])
 def get_workouts():
-  workouts = mongo.db.workouts.find()
+  type = request.args.get("type")
+  print(f"TYPE: {type}")
+  workouts = mongo.db.workouts.find({"type": type})
   workouts_list = [mongo_to_json(workout) for workout in workouts]
   return jsonify(workouts_list)
 
