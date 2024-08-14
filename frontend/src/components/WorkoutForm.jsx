@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, TextField, Button, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { postWorkout } from "../api/workoutsApi";
@@ -7,7 +7,6 @@ export default function WorkoutForm({ selectedTab }) {
   const [formSuccess, setFormSuccess] = useState(false);
 
   const workoutTypeMap = (num) => {
-    console.log(num);
     switch (num) {
       case 0:
         return "Run";
@@ -20,21 +19,25 @@ export default function WorkoutForm({ selectedTab }) {
     }
   };
 
-
   const [formData, setFormData] = useState({
     date: "",
     type: workoutTypeMap(selectedTab),
   });
 
+  useEffect(() => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      type: workoutTypeMap(selectedTab),
+    }));
+  }, [selectedTab]);
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value,
-    });
+    }));
   };
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
