@@ -29,7 +29,7 @@ function App() {
         <h1>Fitness Tracker</h1>
         <WorkoutForm />
         <Box>
-          <Box sx={{ fontSize: "1.6rem", marginBottom: 1.8 }}>Recent Workouts</Box>
+          <Box sx={{ fontSize: "1.6rem", marginBottom: 1.8 }}>Recently Added Workouts</Box>
           {workouts.length > 0 ? <WorkoutCards workouts={workouts} /> : <p>Getting workout history...</p>}
         </Box>
       </LocalizationProvider>
