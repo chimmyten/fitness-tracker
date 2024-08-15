@@ -3,7 +3,7 @@ import { Box, TextField, Button, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { postWorkout } from "../api/workoutsApi";
 
-export default function WorkoutForm({ selectedTab }) {
+export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
   const [formSuccess, setFormSuccess] = useState(false);
 
   const workoutTypeMap = (num) => {
@@ -49,6 +49,7 @@ export default function WorkoutForm({ selectedTab }) {
     } else {
       setFormSuccess(false);
     }
+    handleWorkoutAdded();
   };
 
   const renderForm = () => {

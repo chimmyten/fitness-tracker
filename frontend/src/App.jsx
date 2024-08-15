@@ -11,6 +11,7 @@ function App() {
   const [selectedTab, setSelectedTab] = useState(0);
   const [loadingWorkouts, setLoadingWorkouts] = useState(true);
   const [workouts, setWorkouts] = useState([]);
+  const [workoutAdded, setWorkoutAdded] = useState(false);
 
   const workoutTypeMap = (num) => {
     switch (num) {
@@ -26,7 +27,7 @@ function App() {
   };
 
 
-  const handleChange = (event, newValue) => {
+  const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
 
@@ -40,21 +41,25 @@ function App() {
         console.error(`Failed to fetch workouts: ${error}`);
       }
       setLoadingWorkouts(false);
+      setWorkoutAdded(false);
     };
 
     setWorkouts(getWorkouts(workoutTypeMap(selectedTab)));
-  }, [selectedTab]);
+  }, [selectedTab, workoutAdded]);
 
+  const handleWorkoutAdded = () => {
+    setWorkoutAdded(true);
+  }
 
   return (
     <Box>
       <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ backgroundColor: "#fff" }}>
         <h1>Fitness Tracker</h1>
-        <Tabs value={selectedTab} onChange={handleChange}>
+        <Tabs value={selectedTab} onChange={handleTabChange}>
           <Tab name="type" label="Run" />
           <Tab name="type" label="Weights" />
         </Tabs>
-        <WorkoutForm selectedTab={selectedTab}/>
+        <WorkoutForm selectedTab={selectedTab} handleWorkoutAdded={handleWorkoutAdded}/>
         <Box>
           <Box sx={{ fontSize: "1.6rem", marginBottom: 1.8 }}>Workout Logs</Box>
            <WorkoutsTable workouts={workouts} workoutType={workoutTypeMap(selectedTab)} loadingWorkouts={loadingWorkouts} />
