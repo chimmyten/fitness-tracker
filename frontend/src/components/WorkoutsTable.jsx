@@ -11,50 +11,28 @@ import {
   Paper,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { fetchWorkouts, deleteWorkout } from "../api/workoutsApi";
+import { deleteWorkout } from "../api/workoutsApi";
 
-export default function WorkoutsTable({ selectedTab }) {
-  const [loadingWorkouts, setLoadingWorkouts] = useState(true);
-  const [workouts, setWorkouts] = useState([]);
-  const workoutTypeMap = (num) => {
-    switch (num) {
-      case 0:
-        return "Run";
-
-      case 1:
-        return "Weights";
-
-      default:
-        return "Run";
-    }
-  };
-
-  const workoutType = workoutTypeMap(selectedTab);
+export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }) {
+  const [displayedWorkouts, setDisplayedWorkouts] = useState([]);
 
   useEffect(() => {
-    const getWorkouts = async (workoutType) => {
-      setLoadingWorkouts(true);
-      try {
-        const fetchedWorkouts = await fetchWorkouts(workoutType);
-        setWorkouts(fetchedWorkouts);
-      } catch (error) {
-        console.error(`Failed to fetch workouts: ${error}`);
-      }
-      setLoadingWorkouts(false);
-    };
+    if (Array.isArray(workouts)) {
+      setDisplayedWorkouts(workouts);
+    } else {
+      setDisplayedWorkouts([]); // Fallback to an empty array if workouts is not an array
+    }
+  }, [workouts]);
 
-    setWorkouts(getWorkouts(workoutType));
-  }, [workoutType]);
-
+  console.log(Array.isArray(workouts));
   const handleDelete = async (workoutId) => {
     console.log(workoutId);
-    deleteWorkout(workoutId);
+    await deleteWorkout(workoutId);
 
     const deleted_index = workouts.findIndex((workout) => workout._id === workoutId);
     if (deleted_index !== -1) {
-      const updatedWorkouts = [...workouts];
-      updatedWorkouts.splice(deleted_index, 1);
-      setWorkouts(updatedWorkouts);
+      const updatedWorkouts = displayedWorkouts(workout => workout._id !== workoutId);
+      setDisplayedWorkouts(updatedWorkouts);
     }
   };
 
@@ -92,7 +70,7 @@ export default function WorkoutsTable({ selectedTab }) {
   const tableRows = (workoutType) => {
     switch (workoutType) {
       case "Run":
-        return workouts.map((workout) => (
+        return displayedWorkouts.map((workout) => (
           <TableRow key={workout._id}>
             <TableCell>{workout.date}</TableCell>
             <TableCell align="right">{workout.distance}</TableCell>
