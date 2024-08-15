@@ -43,8 +43,6 @@ export default function WorkoutsTable({ selectedTab }) {
     setWorkouts(getWorkouts(workoutType));
   }, [workoutType]);
 
-  // console.log(workouts);
-
   const handleDelete = async (workoutId) => {
     console.log(workoutId);
     deleteWorkout(workoutId);
@@ -130,24 +128,6 @@ export default function WorkoutsTable({ selectedTab }) {
   };
 
   return (
-    // <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px" }}>
-    //   {workouts.map((workout) => {
-    //     return (
-    //       <Card
-    //         key={workout._id}
-    //         variant="outlined"
-    //         sx={{ boxShadow: 2, pr: 1.5, transition: "transform 0.3s", "&:hover": { transform: "scale(1.025)" }, position: "relative" }}
-    //       >
-    //         <Box sx={{ position: "absolute", top: -5, right: -5}}>
-    // <IconButton variant="outlined" onClick={() => {handleDelete(workout._id)}}>
-    //   <DeleteIcon />
-    // </IconButton>
-    //         </Box>
-    //         {card(workout)}
-    //       </Card>
-    //     );
-    //   })}
-    // </Box>
     <>
       {workouts.length > 0 ? (
         <Box>
