@@ -33,8 +33,8 @@ export default function WorkoutsTable({ selectedTab }) {
   useEffect(() => {
     const getWorkouts = async (workoutType) => {
       try {
-        const workouts = await fetchWorkouts(workoutType);
-        setWorkouts(workouts);
+        const fetchedWorkouts = await fetchWorkouts(workoutType);
+        setWorkouts(fetchedWorkouts);
       } catch (error) {
         console.error(`Failed to fetch workouts: ${error}`);
       }
@@ -48,6 +48,13 @@ export default function WorkoutsTable({ selectedTab }) {
   const handleDelete = async (workoutId) => {
     console.log(workoutId);
     deleteWorkout(workoutId);
+
+    const deleted_index = workouts.findIndex((workout) => workout._id === workoutId);
+    if (deleted_index !== -1) {
+      const updatedWorkouts = [...workouts];
+      updatedWorkouts.splice(deleted_index, 1);
+      setWorkouts(updatedWorkouts);
+    }
   };
 
   const tableHeaders = (workoutType) => {
