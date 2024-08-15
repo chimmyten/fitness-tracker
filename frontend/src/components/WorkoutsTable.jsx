@@ -14,6 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { fetchWorkouts, deleteWorkout } from "../api/workoutsApi";
 
 export default function WorkoutsTable({ selectedTab }) {
+  const [loadingWorkouts, setLoadingWorkouts] = useState(true);
   const [workouts, setWorkouts] = useState([]);
   const workoutTypeMap = (num) => {
     switch (num) {
@@ -32,12 +33,14 @@ export default function WorkoutsTable({ selectedTab }) {
 
   useEffect(() => {
     const getWorkouts = async (workoutType) => {
+      setLoadingWorkouts(true);
       try {
         const fetchedWorkouts = await fetchWorkouts(workoutType);
         setWorkouts(fetchedWorkouts);
       } catch (error) {
         console.error(`Failed to fetch workouts: ${error}`);
       }
+      setLoadingWorkouts(false);
     };
 
     setWorkouts(getWorkouts(workoutType));
@@ -129,7 +132,7 @@ export default function WorkoutsTable({ selectedTab }) {
 
   return (
     <>
-      {workouts.length > 0 ? (
+      {!loadingWorkouts ? (
         <Box>
           <TableContainer component={Paper}>
             <Table>
