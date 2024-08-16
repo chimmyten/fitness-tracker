@@ -9,9 +9,52 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Select,
+  FormControl,
+  MenuItem,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteWorkout } from "../api/workoutsApi";
+
+function TableFilters(props) {
+  const { workoutType } = props;
+  const [sortCriteria, setSortCriteria] = useState("date desc");
+
+  const menuOptions = {
+    "Run": [
+      {value: "distance", label: "Distance"},
+      {value: "duration", label: "Duration"}
+    ],
+    "Weights": [
+      {value: "duration", label: "Duration"}
+    ]
+  }
+
+  const menuItems = menuOptions[workoutType] || [];
+  const handleSortChange = (event) => {
+    setSortCriteria(event.target.value);
+  };
+
+  console.log(sortCriteria);
+  return (
+    <Box component={Paper} sx={{ minWidth: "150px", maxHeight: "75px", padding: 2 }}>
+      <FormControl sx={{ display: "flex" }}>
+        <Box fontSize="15px">Sort By</Box>
+        <Select value={sortCriteria} onChange={handleSortChange} sx={{ fontSize: "15px"}}>
+          <MenuItem value="date desc">
+            Date &darr;
+          </MenuItem>
+          <MenuItem value="date asc">
+            Date &uarr;
+          </MenuItem>
+          {menuItems.map((option) => {
+            return <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+          })}
+        </Select>
+      </FormControl>
+    </Box>
+  );
+}
 
 export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }) {
   const [displayedWorkouts, setDisplayedWorkouts] = useState([]);
@@ -30,7 +73,7 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
 
     const deleted_index = workouts.findIndex((workout) => workout._id === workoutId);
     if (deleted_index !== -1) {
-      const updatedWorkouts = displayedWorkouts.filter(workout => workout._id !== workoutId);
+      const updatedWorkouts = displayedWorkouts.filter((workout) => workout._id !== workoutId);
       setDisplayedWorkouts(updatedWorkouts);
     }
   };
@@ -110,9 +153,10 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
   return (
     <>
       {!loadingWorkouts ? (
-        <Box>
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <TableFilters workoutType={workoutType} />
           <TableContainer component={Paper}>
-            <Table>
+            <Table size="small">
               <TableHead>{tableHeaders(workoutType)}</TableHead>
               <TableBody>{tableRows(workoutType)}</TableBody>
             </Table>
