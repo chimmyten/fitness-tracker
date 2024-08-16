@@ -65,7 +65,6 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
       return clearedData;
     });
   };
-  console.log(formData);
   const renderForm = () => {
     switch (selectedTab) {
       case 0:
