@@ -19,6 +19,7 @@ const fetchWorkouts = async (workoutType) => {
 };
 
 const postWorkout = async (formData) => {
+  formData.date = formData.date !== null ? formData.date.format("MM/DD/YYYY"): "";
   try {
     const response = await fetch("http://127.0.0.1:8000/", {
       method: "POST",

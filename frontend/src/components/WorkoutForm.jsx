@@ -20,8 +20,11 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
   };
 
   const [formData, setFormData] = useState({
-    date: "",
+    date: null,
     type: workoutTypeMap(selectedTab),
+    distance: "",
+    muscles: "",
+    duration: ""
   });
 
   useEffect(() => {
@@ -50,21 +53,34 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
       setFormSuccess(false);
     }
     handleWorkoutAdded();
+    // clear the form fields
+    setFormData((prevFormData) => {
+      const clearedData = Object.keys(prevFormData).reduce((acc, key) => {
+        acc[key] = key === "type" ? prevFormData[key] : ""; // Keep 'type' unchanged
+        if (key === "date") {
+          acc[key] = null;
+        }
+        return acc;
+      }, {});
+      return clearedData;
+    });
   };
-
+  console.log(formData);
   const renderForm = () => {
     switch (selectedTab) {
       case 0:
         return (
           <form onSubmit={handleSubmit}>
             <DatePicker
+              value={formData.date}
               name="date"
               onChange={(newValue) => {
-                setFormData({ ...formData, date: newValue.format("YYYY-MM-DD") });
+                setFormData({ ...formData, date: newValue });
               }}
               sx={{ marginTop: 1 }}
             />
             <TextField
+              value={formData.distance}
               name="distance"
               label="Distance"
               variant="outlined"
@@ -73,6 +89,7 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
               onChange={handleFormChange}
             />
             <TextField
+              value={formData.duration}
               name="duration"
               label="Time"
               variant="outlined"
@@ -92,13 +109,15 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
         return (
           <form onSubmit={handleSubmit}>
             <DatePicker
+              value={formData.date}
               name="date"
               onChange={(newValue) => {
-                setFormData({ ...formData, date: newValue.format("YYYY-MM-DD") });
+                setFormData({ ...formData, date: newValue });
               }}
               sx={{ marginTop: 1 }}
             />
             <TextField
+              value={formData.muscles}
               name="muscles"
               label="Muscles"
               variant="outlined"
@@ -107,6 +126,7 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
               onChange={handleFormChange}
             />
             <TextField
+              value={formData.duration}
               name="duration"
               label="Duration"
               variant="outlined"

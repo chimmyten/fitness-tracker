@@ -24,14 +24,13 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
     }
   }, [workouts]);
 
-  console.log(Array.isArray(workouts));
   const handleDelete = async (workoutId) => {
     console.log(workoutId);
     await deleteWorkout(workoutId);
 
     const deleted_index = workouts.findIndex((workout) => workout._id === workoutId);
     if (deleted_index !== -1) {
-      const updatedWorkouts = displayedWorkouts(workout => workout._id !== workoutId);
+      const updatedWorkouts = displayedWorkouts.filter(workout => workout._id !== workoutId);
       setDisplayedWorkouts(updatedWorkouts);
     }
   };
