@@ -13,6 +13,7 @@ import {
   FormControl,
   MenuItem,
 } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteWorkout } from "../api/workoutsApi";
 
@@ -85,30 +86,29 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
     return numeric;
   };
 
-  const sortDisplayedWorkouts = 
-    (field, order) => {
-      const updatedWorkouts = [...displayedWorkouts];
+  const sortDisplayedWorkouts = (field, order) => {
+    const updatedWorkouts = [...displayedWorkouts];
 
-      if (field === "date") {
-        updatedWorkouts.sort((a, b) => {
-          if (order === "asc") {
-            return new Date(a[field]) - new Date(b[field]);
-          } else {
-            return new Date(b[field]) - new Date(a[field]);
-          }
-        });
-      } else {
-        updatedWorkouts.sort((a, b) => {
-          if (order === "asc") {
-            return extractNumeric(a[field]) - extractNumeric(b[field]);
-          } else {
-            return extractNumeric(a[field]) - extractNumeric(b[field]);
-          }
-        });
-      }
-
-      setDisplayedWorkouts(updatedWorkouts);
+    if (field === "date") {
+      updatedWorkouts.sort((a, b) => {
+        if (order === "asc") {
+          return new Date(a[field]) - new Date(b[field]);
+        } else {
+          return new Date(b[field]) - new Date(a[field]);
+        }
+      });
+    } else {
+      updatedWorkouts.sort((a, b) => {
+        if (order === "asc") {
+          return extractNumeric(a[field]) - extractNumeric(b[field]);
+        } else {
+          return extractNumeric(a[field]) - extractNumeric(b[field]);
+        }
+      });
     }
+
+    setDisplayedWorkouts(updatedWorkouts);
+  };
 
   const handleDelete = async (workoutId) => {
     console.log(workoutId);
@@ -121,34 +121,115 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
     }
   };
 
-  console.log(displayedWorkouts);
+  const columns = (workoutType) => {
+    switch (workoutType) {
+      case "Run":
+        return [
+          { field: "date", headerName: "Date", flex: 1 },
+          { field: "distance", headerName: "Distance", flex: 1 },
+          { field: "duration", headerName: "Duration", flex: 1 },
+          {
+            field: "delete",
+            headerName: "Delete",
+            flex: 0.5,
+            renderCell: (params) => (
+              <IconButton
+                variant="outlined"
+                onClick={() => {
+                  handleDelete(params.row._id);
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            ),
+          },
+        ];
+      case "Weights":
+        return [
+          { field: "date", headerName: "Date", flex: 1 },
+          { field: "muscles", headerName: "Muscles", flex: 1 },
+          { field: "duration", headerName: "Duration", flex: 1 },
+          {
+            field: "delete",
+            headerName: "Delete",
+            flex: 0.5,
+            renderCell: (params) => (
+              <IconButton
+                variant="outlined"
+                onClick={() => {
+                  handleDelete(params.row._id);
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            ),
+          },
+        ];
+      default:
+        return [
+          { field: "date", headerName: "Date", flex: 1 },
+          { field: "type", headerName: "Type", flex: 1 },
+          {
+            field: "delete",
+            headerName: "Delete",
+            flex: 0.5,
+            renderCell: (params) => (
+              <IconButton
+                variant="outlined"
+                onClick={() => {
+                  handleDelete(params.row._id);
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            ),
+          },
+        ];
+    }
+  };
 
   const tableHeaders = (workoutType) => {
     switch (workoutType) {
       case "Run":
         return (
           <TableRow>
-            <TableCell sx={{fontWeight: "Bold"}}>Date</TableCell>
-            <TableCell align="right" sx={{fontWeight: "Bold"}}>Distance</TableCell>
-            <TableCell align="right" sx={{fontWeight: "Bold"}}>Duration</TableCell>
-            <TableCell align="right" sx={{fontWeight: "Bold"}}>Delete</TableCell>
+            <TableCell sx={{ fontWeight: "Bold" }}>Date</TableCell>
+            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
+              Distance
+            </TableCell>
+            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
+              Duration
+            </TableCell>
+            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
+              Delete
+            </TableCell>
           </TableRow>
         );
       case "Weights":
         return (
           <TableRow>
-            <TableCell sx={{fontWeight: "Bold"}}>Date</TableCell>
-            <TableCell align="right" sx={{fontWeight: "Bold"}}>Muscles</TableCell>
-            <TableCell align="right" sx={{fontWeight: "Bold"}}>Duration</TableCell>
-            <TableCell align="right" sx={{fontWeight: "Bold"}}>Delete</TableCell>
+            <TableCell sx={{ fontWeight: "Bold" }}>Date</TableCell>
+            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
+              Muscles
+            </TableCell>
+            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
+              Duration
+            </TableCell>
+            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
+              Delete
+            </TableCell>
           </TableRow>
         );
       default:
         return (
           <TableRow>
-            <TableCell sx={{fontWeight: "Bold"}}>Date</TableCell>
-            <TableCell align="right" sx={{fontWeight: "Bold"}}>Type</TableCell>
-            <TableCell align="right" sx={{fontWeight: "Bold"}}>Delete</TableCell>
+            <TableCell sx={{ fontWeight: "Bold" }}>Date</TableCell>
+            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
+              Type
+            </TableCell>
+            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
+              Delete
+            </TableCell>
           </TableRow>
         );
     }
@@ -200,12 +281,23 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
       {!loadingWorkouts ? (
         <Box sx={{ display: "flex", gap: 2 }}>
           <TableFilters workoutType={workoutType} sortDisplayedWorkouts={sortDisplayedWorkouts} />
-          <TableContainer component={Paper}>
+          {/* <TableContainer component={Paper}>
             <Table size="small">
               <TableHead>{tableHeaders(workoutType)}</TableHead>
               <TableBody>{tableRows(workoutType)}</TableBody>
             </Table>
-          </TableContainer>
+          </TableContainer> */}
+          <DataGrid
+            rows={displayedWorkouts}
+            getRowId={(row) => row._id}
+            columns={columns(workoutType)}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 10 },
+              },
+            }}
+            pageSizeOptions={[10, 25]}
+          />
         </Box>
       ) : (
         <Box>Getting workouts history...</Box>
