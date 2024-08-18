@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, TextField, Button, Typography } from "@mui/material";
+import { Box, TextField, Button, Typography, Paper } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { postWorkout } from "../api/workoutsApi";
 
@@ -24,7 +24,7 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
     type: workoutTypeMap(selectedTab),
     distance: "",
     muscles: "",
-    duration: ""
+    duration: "",
   });
 
   useEffect(() => {
@@ -70,75 +70,83 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
       case 0:
         return (
           <form onSubmit={handleSubmit}>
-            <DatePicker
-              value={formData.date}
-              name="date"
-              onChange={(newValue) => {
-                setFormData({ ...formData, date: newValue });
-              }}
-              sx={{ marginTop: 1 }}
-            />
-            <TextField
-              value={formData.distance}
-              name="distance"
-              label="Distance"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              onChange={handleFormChange}
-            />
-            <TextField
-              value={formData.duration}
-              name="duration"
-              label="Time"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              onChange={handleFormChange}
-            />
-            <Box sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
-              <Button type="submit" variant="contained" color="primary">
-                Add Run
-              </Button>
-              {formSuccess && <Typography sx={{ color: "green" }}>Workout Added!</Typography>}
-            </Box>
+            <Paper elevation={3} sx={{ padding: 3 }}>
+              <DatePicker
+                value={formData.date}
+                name="date"
+                onChange={(newValue) => {
+                  setFormData({ ...formData, date: newValue });
+                }}
+                sx={{ marginTop: 1 }}
+              />
+              <TextField
+                value={formData.distance}
+                name="distance"
+                label="Distance"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                onChange={handleFormChange}
+              />
+              <TextField
+                value={formData.duration}
+                name="duration"
+                label="Time"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                onChange={handleFormChange}
+              />
+              <Box sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                <Button type="submit" variant="contained" color="primary">
+                  Add Run
+                </Button>
+                {formSuccess && <Typography sx={{ color: "green" }}>Workout Added!</Typography>}
+              </Box>
+            </Paper>
           </form>
         );
       case 1:
         return (
           <form onSubmit={handleSubmit}>
-            <DatePicker
-              value={formData.date}
-              name="date"
-              onChange={(newValue) => {
-                setFormData({ ...formData, date: newValue });
-              }}
-              sx={{ marginTop: 1 }}
-            />
-            <TextField
-              value={formData.muscles}
-              name="muscles"
-              label="Muscles"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              onChange={handleFormChange}
-            />
-            <TextField
-              value={formData.duration}
-              name="duration"
-              label="Duration"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              onChange={handleFormChange}
-            />
-            <Box sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
-              <Button type="submit" variant="contained" color="primary">
-                Add Weights
-              </Button>
-              {formSuccess && <Typography sx={{ color: "green" }}>Workout Added!</Typography>}
-            </Box>
+            <Paper elevation={3} sx={{ padding: 3 }}>
+              <DatePicker
+                value={formData.date}
+                name="date"
+                onChange={(newValue) => {
+                  setFormData({ ...formData, date: newValue });
+                }}
+                sx={{ marginTop: 1 }}
+              />
+              <Box sx={{ display: "flex", gap: 3 }}>
+                <TextField
+                  value={formData.muscles}
+                  name="muscles"
+                  label="Muscles"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  onChange={handleFormChange}
+                  sx={{ maxWidth: "500px" }}
+                />
+                <TextField
+                  value={formData.duration}
+                  name="duration"
+                  label="Duration"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  onChange={handleFormChange}
+                  sx={{ maxWidth: "300px" }}
+                />
+              </Box>
+              <Box sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                <Button type="submit" variant="contained" color="primary">
+                  Add Weights
+                </Button>
+                {formSuccess && <Typography sx={{ color: "green" }}>Workout Added!</Typography>}
+              </Box>
+            </Paper>
           </form>
         );
       default:

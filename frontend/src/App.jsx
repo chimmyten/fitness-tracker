@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, Tabs, Tab } from "@mui/material";
+import { Box, Tabs, Tab, Paper } from "@mui/material";
 import WorkoutForm from "./components/WorkoutForm";
 import WorkoutsTable from "./components/WorkoutsTable";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
@@ -26,7 +26,6 @@ function App() {
     }
   };
 
-
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
@@ -49,20 +48,28 @@ function App() {
 
   const handleWorkoutAdded = () => {
     setWorkoutAdded(true);
-  }
+  };
 
   return (
     <Box>
       <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ backgroundColor: "#fff" }}>
-        <Box sx={{ fontSize: "2.5rem", fontWeight: "bold", marginTop: 3, marginBottom: 2}}>Fitness Tracker</Box>
-        <Tabs value={selectedTab} onChange={handleTabChange}>
-          <Tab name="type" label="Run" />
-          <Tab name="type" label="Weights" />
-        </Tabs>
-        <WorkoutForm selectedTab={selectedTab} handleWorkoutAdded={handleWorkoutAdded}/>
+        <Box sx={{ fontSize: "2.5rem", fontWeight: "bold", marginTop: 3, marginBottom: 2 }}>Fitness Tracker</Box>
+        <Paper elevation={3} sx={{ display: "inline-flex"}}>
+          <Tabs value={selectedTab} onChange={handleTabChange}>
+            <Tab name="type" label="Run" />
+            <Tab name="type" label="Weights" />
+          </Tabs>
+        </Paper>
+        <WorkoutForm selectedTab={selectedTab} handleWorkoutAdded={handleWorkoutAdded} />
         <Box>
-          <Box sx={{ fontSize: "1.8rem", marginBottom: 2, textAlign: "center" }}>{workoutTypeMap(selectedTab)} Workouts</Box>
-           <WorkoutsTable workouts={workouts} workoutType={workoutTypeMap(selectedTab)} loadingWorkouts={loadingWorkouts} />
+          <Box sx={{ fontSize: "1.8rem", marginBottom: 2, textAlign: "center" }}>
+            {workoutTypeMap(selectedTab)} Workouts
+          </Box>
+          <WorkoutsTable
+            workouts={workouts}
+            workoutType={workoutTypeMap(selectedTab)}
+            loadingWorkouts={loadingWorkouts}
+          />
         </Box>
       </LocalizationProvider>
     </Box>
