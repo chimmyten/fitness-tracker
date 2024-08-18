@@ -2,12 +2,6 @@ import { useState, useEffect } from "react";
 import {
   Box,
   IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Paper,
   Select,
   FormControl,
@@ -185,94 +179,6 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
             ),
           },
         ];
-    }
-  };
-
-  const tableHeaders = (workoutType) => {
-    switch (workoutType) {
-      case "Run":
-        return (
-          <TableRow>
-            <TableCell sx={{ fontWeight: "Bold" }}>Date</TableCell>
-            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
-              Distance
-            </TableCell>
-            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
-              Duration
-            </TableCell>
-            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
-              Delete
-            </TableCell>
-          </TableRow>
-        );
-      case "Weights":
-        return (
-          <TableRow>
-            <TableCell sx={{ fontWeight: "Bold" }}>Date</TableCell>
-            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
-              Muscles
-            </TableCell>
-            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
-              Duration
-            </TableCell>
-            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
-              Delete
-            </TableCell>
-          </TableRow>
-        );
-      default:
-        return (
-          <TableRow>
-            <TableCell sx={{ fontWeight: "Bold" }}>Date</TableCell>
-            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
-              Type
-            </TableCell>
-            <TableCell align="right" sx={{ fontWeight: "Bold" }}>
-              Delete
-            </TableCell>
-          </TableRow>
-        );
-    }
-  };
-
-  const tableRows = (workoutType) => {
-    switch (workoutType) {
-      case "Run":
-        return displayedWorkouts.map((workout) => (
-          <TableRow key={workout._id}>
-            <TableCell>{workout.date}</TableCell>
-            <TableCell align="right">{workout.distance}</TableCell>
-            <TableCell align="right">{workout.duration}</TableCell>
-            <TableCell align="right">
-              <IconButton
-                variant="outlined"
-                onClick={() => {
-                  handleDelete(workout._id);
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </TableCell>
-          </TableRow>
-        ));
-      case "Weights":
-        return displayedWorkouts.map((workout) => (
-          <TableRow key={workout._id}>
-            <TableCell>{workout.date}</TableCell>
-            <TableCell align="right">{workout.muscles}</TableCell>
-            <TableCell align="right">{workout.duration}</TableCell>
-            <TableCell align="right">
-              <IconButton
-                variant="outlined"
-                onClick={() => {
-                  handleDelete(workout._id);
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </TableCell>
-          </TableRow>
-        ));
     }
   };
 
