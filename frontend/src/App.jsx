@@ -54,14 +54,14 @@ function App() {
   return (
     <Box>
       <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ backgroundColor: "#fff" }}>
-        <h1>Fitness Tracker</h1>
+        <Box sx={{ fontSize: "2.5rem", fontWeight: "bold", marginTop: 3, marginBottom: 2}}>Fitness Tracker</Box>
         <Tabs value={selectedTab} onChange={handleTabChange}>
           <Tab name="type" label="Run" />
           <Tab name="type" label="Weights" />
         </Tabs>
         <WorkoutForm selectedTab={selectedTab} handleWorkoutAdded={handleWorkoutAdded}/>
         <Box>
-          <Box sx={{ fontSize: "1.6rem", marginBottom: 1.8 }}>Workout Logs</Box>
+          <Box sx={{ fontSize: "1.8rem", marginBottom: 2, textAlign: "center" }}>{workoutTypeMap(selectedTab)} Workouts</Box>
            <WorkoutsTable workouts={workouts} workoutType={workoutTypeMap(selectedTab)} loadingWorkouts={loadingWorkouts} />
         </Box>
       </LocalizationProvider>
