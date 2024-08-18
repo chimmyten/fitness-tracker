@@ -25,6 +25,7 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
     distance: "",
     muscles: "",
     duration: "",
+    details: "",
   });
 
   useEffect(() => {
@@ -79,24 +80,37 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
                 }}
                 sx={{ marginTop: 1 }}
               />
-              <TextField
-                value={formData.distance}
-                name="distance"
-                label="Distance"
+              <Box sx={{ display: "flex", gap: 3 }}>
+                <TextField
+                  value={formData.distance}
+                  name="distance"
+                  label="Distance"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  onChange={handleFormChange}
+                  sx={{ maxWidth: "300px" }}
+                />
+                <TextField
+                  value={formData.duration}
+                  name="duration"
+                  label="Time"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  onChange={handleFormChange}
+                  sx={{ maxWidth: "300px" }}
+                />
+              </Box>
+              <TextField 
+                value={formData.details}
+                name="details"
+                label="Details"
                 variant="outlined"
-                fullWidth
+                multiline
                 margin="normal"
-                onChange={handleFormChange}
-              />
-              <TextField
-                value={formData.duration}
-                name="duration"
-                label="Time"
-                variant="outlined"
                 fullWidth
-                margin="normal"
-                onChange={handleFormChange}
-              />
+                onChange={handleFormChange}/>
               <Box sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
                 <Button type="submit" variant="contained" color="primary">
                   Add Run
@@ -127,7 +141,7 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
                   fullWidth
                   margin="normal"
                   onChange={handleFormChange}
-                  sx={{ maxWidth: "500px" }}
+                  sx={{ maxWidth: "400px" }}
                 />
                 <TextField
                   value={formData.duration}
@@ -140,6 +154,15 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
                   sx={{ maxWidth: "300px" }}
                 />
               </Box>
+              <TextField 
+                value={formData.details}
+                name="details"
+                label="Details (Exercises, sets/reps, weight)"
+                variant="outlined"
+                multiline
+                margin="normal"
+                fullWidth
+                onChange={handleFormChange}/>
               <Box sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
                 <Button type="submit" variant="contained" color="primary">
                   Add Weights
