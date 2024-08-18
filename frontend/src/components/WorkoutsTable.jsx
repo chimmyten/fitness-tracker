@@ -121,32 +121,34 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
     }
   };
 
+  console.log(displayedWorkouts);
+
   const tableHeaders = (workoutType) => {
     switch (workoutType) {
       case "Run":
         return (
           <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell align="right">Distance</TableCell>
-            <TableCell align="right">Duration</TableCell>
-            <TableCell align="right">Delete</TableCell>
+            <TableCell sx={{fontWeight: "Bold"}}>Date</TableCell>
+            <TableCell align="right" sx={{fontWeight: "Bold"}}>Distance</TableCell>
+            <TableCell align="right" sx={{fontWeight: "Bold"}}>Duration</TableCell>
+            <TableCell align="right" sx={{fontWeight: "Bold"}}>Delete</TableCell>
           </TableRow>
         );
       case "Weights":
         return (
           <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell align="right">Muscles</TableCell>
-            <TableCell align="right">Duration</TableCell>
-            <TableCell align="right">Delete</TableCell>
+            <TableCell sx={{fontWeight: "Bold"}}>Date</TableCell>
+            <TableCell align="right" sx={{fontWeight: "Bold"}}>Muscles</TableCell>
+            <TableCell align="right" sx={{fontWeight: "Bold"}}>Duration</TableCell>
+            <TableCell align="right" sx={{fontWeight: "Bold"}}>Delete</TableCell>
           </TableRow>
         );
       default:
         return (
           <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell align="right">Type</TableCell>
-            <TableCell align="right">Delete</TableCell>
+            <TableCell sx={{fontWeight: "Bold"}}>Date</TableCell>
+            <TableCell align="right" sx={{fontWeight: "Bold"}}>Type</TableCell>
+            <TableCell align="right" sx={{fontWeight: "Bold"}}>Delete</TableCell>
           </TableRow>
         );
     }
@@ -173,7 +175,7 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
           </TableRow>
         ));
       case "Weights":
-        return workouts.map((workout) => (
+        return displayedWorkouts.map((workout) => (
           <TableRow key={workout._id}>
             <TableCell>{workout.date}</TableCell>
             <TableCell align="right">{workout.muscles}</TableCell>

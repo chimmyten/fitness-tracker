@@ -112,7 +112,7 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
                 fullWidth
                 onChange={handleFormChange}/>
               <Box sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                <Button type="submit" variant="contained" color="primary">
+                <Button type="submit" variant="contained" color="primary" sx={{marginTop: 1}}>
                   Add Run
                 </Button>
                 {formSuccess && <Typography sx={{ color: "green" }}>Workout Added!</Typography>}
@@ -164,7 +164,7 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
                 fullWidth
                 onChange={handleFormChange}/>
               <Box sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                <Button type="submit" variant="contained" color="primary">
+                <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 1}}>
                   Add Weights
                 </Button>
                 {formSuccess && <Typography sx={{ color: "green" }}>Workout Added!</Typography>}
