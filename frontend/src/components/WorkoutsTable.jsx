@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Box,
-  IconButton,
-  Paper,
-  Select,
-  FormControl,
-  MenuItem,
-} from "@mui/material";
+import { Box, IconButton, Paper, Select, FormControl, MenuItem } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteWorkout } from "../api/workoutsApi";
@@ -61,8 +54,19 @@ function TableFilters(props) {
   );
 }
 
+function WorkoutDetails({ selectedWorkout }) {
+  console.log(selectedWorkout);
+  return (
+    <Box component={Paper} sx={{ minWidth: "150px", maxWidth: "250px", maxHeight: "75px", padding: 2 }}>
+      <Box sx={{ fontWeight: "bold" }}>Details:</Box>
+      <Box sx={{ whiteSpace: "pre-line" }}>{selectedWorkout.details}</Box>
+    </Box>
+  );
+}
+
 export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }) {
   const [displayedWorkouts, setDisplayedWorkouts] = useState([]);
+  const [selectedWorkout, setSelectedWorkout] = useState(null);
 
   useEffect(() => {
     if (Array.isArray(workouts)) {
@@ -71,6 +75,10 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
       setDisplayedWorkouts([]); // Fallback to an empty array if workouts is not an array
     }
   }, [workouts]);
+
+  useEffect(() => {
+    setSelectedWorkout(null);
+  }, [workoutType])
 
   const extractNumeric = (str) => {
     const match = str.match(/^(\d+)(.*)$/);
@@ -182,17 +190,20 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
     }
   };
 
+  const handleSelectionChange = (newSelection) => {
+    setSelectedWorkout(displayedWorkouts.find((workout) => workout._id === newSelection[0]));
+  };
+
   return (
     <>
       {!loadingWorkouts ? (
         <Box sx={{ display: "flex", gap: 2 }}>
-          <TableFilters workoutType={workoutType} sortDisplayedWorkouts={sortDisplayedWorkouts} />
-          {/* <TableContainer component={Paper}>
-            <Table size="small">
-              <TableHead>{tableHeaders(workoutType)}</TableHead>
-              <TableBody>{tableRows(workoutType)}</TableBody>
-            </Table>
-          </TableContainer> */}
+          <Box sx={{ display: "flex", gap: 2, flexDirection: "column" }}>
+            <TableFilters workoutType={workoutType} sortDisplayedWorkouts={sortDisplayedWorkouts} />
+            {selectedWorkout !== null && selectedWorkout !== undefined && (
+              <WorkoutDetails selectedWorkout={selectedWorkout} />
+            )}
+          </Box>
           <DataGrid
             rows={displayedWorkouts}
             getRowId={(row) => row._id}
@@ -203,6 +214,13 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
               },
             }}
             pageSizeOptions={[10, 25]}
+            disableMultipleRowSelection={true}
+            onRowSelectionModelChange={handleSelectionChange}
+            sx={{
+              "& .MuiDataGrid-columnHeaderTitle": {
+                fontWeight: "bold",
+              },
+            }}
           />
         </Box>
       ) : (
