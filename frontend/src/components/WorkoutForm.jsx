@@ -5,6 +5,7 @@ import { postWorkout } from "../api/workoutsApi";
 
 export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
   const [formSuccess, setFormSuccess] = useState(false);
+  const [formError, setFormError] = useState("");
 
   const workoutTypeMap = (num) => {
     switch (num) {
@@ -43,13 +44,35 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
     }));
   };
 
+  console.log(formError);
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const submission = postWorkout(formData);
+    if (!formData.date) {
+      setFormError("Please enter date");
+      setFormSuccess(false);
+      return;
+    }
+
+    const distanceRegex = /^\d+[a-zA-Z]+$/;
+    if (formData.distance && !distanceRegex.test(formData.distance)) {
+      setFormError("Please enter distance with a number followed by units");
+      setFormSuccess(false);
+      return;
+    }
+
+    const timeRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+    if (formData.duration && !timeRegex.test(formData.duration)) {
+      setFormError("Please enter time in hh:mm:ss format");
+      setFormSuccess(false);
+      return;
+    }
+
+    const submission = await postWorkout(formData);
 
     if (submission) {
       setFormSuccess(true);
+      setFormError("");
     } else {
       setFormSuccess(false);
     }
@@ -84,7 +107,7 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
                 <TextField
                   value={formData.distance}
                   name="distance"
-                  label="Distance"
+                  label="Distance (e.g. 1mi)"
                   variant="outlined"
                   fullWidth
                   margin="normal"
@@ -94,7 +117,7 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
                 <TextField
                   value={formData.duration}
                   name="duration"
-                  label="Time"
+                  label="Time (hh:mm:ss)"
                   variant="outlined"
                   fullWidth
                   margin="normal"
@@ -102,7 +125,7 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
                   sx={{ maxWidth: "300px" }}
                 />
               </Box>
-              <TextField 
+              <TextField
                 value={formData.details}
                 name="details"
                 label="Details"
@@ -110,12 +133,14 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
                 multiline
                 margin="normal"
                 fullWidth
-                onChange={handleFormChange}/>
+                onChange={handleFormChange}
+              />
               <Box sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                <Button type="submit" variant="contained" color="primary" sx={{marginTop: 1}}>
+                <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 1 }}>
                   Add Run
                 </Button>
                 {formSuccess && <Typography sx={{ color: "green" }}>Workout Added!</Typography>}
+                {formError && <Typography sx={{ color: "red" }}>{formError}</Typography>}
               </Box>
             </Paper>
           </form>
@@ -146,7 +171,7 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
                 <TextField
                   value={formData.duration}
                   name="duration"
-                  label="Duration"
+                  label="Duration (hh:mm:ss)"
                   variant="outlined"
                   fullWidth
                   margin="normal"
@@ -154,7 +179,7 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
                   sx={{ maxWidth: "300px" }}
                 />
               </Box>
-              <TextField 
+              <TextField
                 value={formData.details}
                 name="details"
                 label="Details (Exercises, sets/reps, weight)"
@@ -162,12 +187,14 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
                 multiline
                 margin="normal"
                 fullWidth
-                onChange={handleFormChange}/>
+                onChange={handleFormChange}
+              />
               <Box sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 1}}>
+                <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 1 }}>
                   Add Weights
                 </Button>
                 {formSuccess && <Typography sx={{ color: "green" }}>Workout Added!</Typography>}
+                {formError && <Typography sx={{ color: "red" }}>{formError}</Typography>}
               </Box>
             </Paper>
           </form>
