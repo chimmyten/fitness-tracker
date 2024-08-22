@@ -1,8 +1,23 @@
 import { useState, useEffect } from "react";
-import { Box, IconButton, Paper, Select, FormControl, MenuItem } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Paper,
+  Select,
+  FormControl,
+  MenuItem,
+  TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { deleteWorkout } from "../api/workoutsApi";
+import dayjs from "dayjs";
 
 function TableFilters(props) {
   const { workoutType, sortDisplayedWorkouts } = props;
@@ -55,7 +70,6 @@ function TableFilters(props) {
 }
 
 function WorkoutDetails({ selectedWorkout }) {
-  console.log(selectedWorkout);
   return (
     <Box component={Paper} sx={{ minWidth: "150px", maxWidth: "250px", maxHeight: "75px", padding: 2 }}>
       <Box sx={{ fontWeight: "bold" }}>Details:</Box>
@@ -64,9 +78,87 @@ function WorkoutDetails({ selectedWorkout }) {
   );
 }
 
+function EditWorkoutModal({ open, setOpen, selectedWorkout, handleSave }) {
+  const [editedWorkout, setEditedWorkout] = useState(selectedWorkout);
+
+  useEffect(() => {
+    setEditedWorkout(selectedWorkout);
+  }, [selectedWorkout]);
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setEditedWorkout((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setEditedWorkout(selectedWorkout);
+  }
+
+  return (
+    <Dialog
+      open={open}
+      onClose={handleClose}
+    >
+      <DialogContent>
+        <DatePicker
+          name="date"
+          defaultValue={editedWorkout.date ? dayjs(editedWorkout.date, "MM/DD/YYYY") : null}
+          onChange={(newValue) => {
+            setEditedWorkout({ ...editedWorkout, date: newValue });
+          }}
+          sx={{ marginTop: 1 }}
+        />
+        <Box sx={{ display: "flex", gap: 3 }}>
+          <TextField
+            value={editedWorkout.distance || ""}
+            name="distance"
+            label="Distance (e.g. 1mi)"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            onChange={handleInputChange}
+            sx={{ maxWidth: "300px" }}
+          />
+          <TextField
+            value={editedWorkout.duration || ""}
+            name="duration"
+            label="Time (hh:mm:ss)"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            onChange={handleInputChange}
+            sx={{ maxWidth: "300px" }}
+          />
+        </Box>
+        <TextField
+          value={editedWorkout.details || ""}
+          name="details"
+          label="Details"
+          variant="outlined"
+          multiline
+          margin="normal"
+          fullWidth
+          onChange={handleInputChange}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleSave} color="primary">
+          Save
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
 export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }) {
   const [displayedWorkouts, setDisplayedWorkouts] = useState([]);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
+  const [openEditModal, setOpenEditModal] = useState(false);
 
   useEffect(() => {
     if (Array.isArray(workouts)) {
@@ -78,7 +170,7 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
 
   useEffect(() => {
     setSelectedWorkout(null);
-  }, [workoutType])
+  }, [workoutType]);
 
   const extractNumeric = (str) => {
     const match = str.match(/^(\d+)(.*)$/);
@@ -112,8 +204,11 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
     setDisplayedWorkouts(updatedWorkouts);
   };
 
+  const handleEdit = () => {
+    setOpenEditModal(true);
+  };
+
   const handleDelete = async (workoutId) => {
-    console.log(workoutId);
     await deleteWorkout(workoutId);
 
     const deleted_index = workouts.findIndex((workout) => workout._id === workoutId);
@@ -130,6 +225,21 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
           { field: "date", headerName: "Date", flex: 1 },
           { field: "distance", headerName: "Distance", flex: 1 },
           { field: "duration", headerName: "Duration", flex: 1 },
+          {
+            field: "edit",
+            headerName: "Edit",
+            flex: 0.5,
+            renderCell: (params) => (
+              <IconButton
+                variant="outlined"
+                onClick={() => {
+                  handleEdit(params.row._id);
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+            ),
+          },
           {
             field: "delete",
             headerName: "Delete",
@@ -152,6 +262,21 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
           { field: "muscles", headerName: "Muscles", flex: 1 },
           { field: "duration", headerName: "Duration", flex: 1 },
           {
+            field: "edit",
+            headerName: "Edit",
+            flex: 0.5,
+            renderCell: (params) => (
+              <IconButton
+                variant="outlined"
+                onClick={() => {
+                  handleEdit(params.row._id);
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+            ),
+          },
+          {
             field: "delete",
             headerName: "Delete",
             flex: 0.5,
@@ -171,6 +296,21 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
         return [
           { field: "date", headerName: "Date", flex: 1 },
           { field: "type", headerName: "Type", flex: 1 },
+          {
+            field: "edit",
+            headerName: "Edit",
+            flex: 0.5,
+            renderCell: (params) => (
+              <IconButton
+                variant="outlined"
+                onClick={() => {
+                  handleEdit(params.row._id);
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+            ),
+          },
           {
             field: "delete",
             headerName: "Delete",
@@ -225,6 +365,13 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
         </Box>
       ) : (
         <Box>Getting workouts history...</Box>
+      )}
+      {selectedWorkout && (
+        <EditWorkoutModal
+          open={openEditModal}
+          setOpen={setOpenEditModal}
+          selectedWorkout={selectedWorkout}
+        />
       )}
     </>
   );

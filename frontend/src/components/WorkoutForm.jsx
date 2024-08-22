@@ -44,7 +44,6 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
     }));
   };
 
-  console.log(formError);
   const handleSubmit = async (event) => {
     event.preventDefault();
 
