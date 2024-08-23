@@ -79,7 +79,7 @@ function WorkoutDetails({ selectedWorkout }) {
   );
 }
 
-function EditWorkoutModal({ open, setOpen, selectedWorkout, saveWorkout }) {
+function EditWorkoutModal({ open, setOpen, selectedWorkout, saveWorkout, workoutType }) {
   const [editedWorkout, setEditedWorkout] = useState(selectedWorkout);
   const [saveError, setSaveError] = useState("");
 
@@ -119,53 +119,107 @@ function EditWorkoutModal({ open, setOpen, selectedWorkout, saveWorkout }) {
     }
 
     saveWorkout(editedWorkout);
-    setSaveError("")
+    setSaveError("");
+  };
+
+  const editModalContent = (workoutType) => {
+    switch (workoutType) {
+      case "Run":
+        return (
+          <DialogContent>
+            <DatePicker
+              name="date"
+              defaultValue={editedWorkout.date ? dayjs(editedWorkout.date, "MM/DD/YYYY") : null}
+              onChange={(newValue) => {
+                setEditedWorkout({ ...editedWorkout, date: newValue });
+              }}
+              sx={{ marginTop: 1 }}
+            />
+            <Box sx={{ display: "flex", gap: 3 }}>
+              <TextField
+                value={editedWorkout.distance || ""}
+                name="distance"
+                label="Distance (e.g. 1mi)"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                onChange={handleInputChange}
+                sx={{ maxWidth: "300px" }}
+              />
+              <TextField
+                value={editedWorkout.duration || ""}
+                name="duration"
+                label="Time (hh:mm:ss)"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                onChange={handleInputChange}
+                sx={{ maxWidth: "300px" }}
+              />
+            </Box>
+            <TextField
+              value={editedWorkout.details || ""}
+              name="details"
+              label="Details"
+              variant="outlined"
+              multiline
+              margin="normal"
+              fullWidth
+              onChange={handleInputChange}
+            />
+          </DialogContent>
+        );
+      case "Weights":
+        return (
+          <DialogContent>
+            <DatePicker
+              name="date"
+              defaultValue={editedWorkout.date ? dayjs(editedWorkout.date, "MM/DD/YYYY") : null}
+              onChange={(newValue) => {
+                setEditedWorkout({ ...editedWorkout, date: newValue });
+              }}
+              sx={{ marginTop: 1 }}
+            />
+            <Box sx={{ display: "flex", gap: 3 }}>
+              <TextField
+                value={editedWorkout.muscles || ""}
+                name="muscles"
+                label="Muscles"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                onChange={handleInputChange}
+                sx={{ maxWidth: "300px" }}
+              />
+              <TextField
+                value={editedWorkout.duration || ""}
+                name="duration"
+                label="Duration (hh:mm:ss)"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                onChange={handleInputChange}
+                sx={{ maxWidth: "300px" }}
+              />
+            </Box>
+            <TextField
+              value={editedWorkout.details || ""}
+              name="details"
+              label="Details (Exercises, sets/reps, weight)"
+              variant="outlined"
+              multiline
+              margin="normal"
+              fullWidth
+              onChange={handleInputChange}
+            />
+          </DialogContent>
+        );
+    }
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogContent>
-        <DatePicker
-          name="date"
-          defaultValue={editedWorkout.date ? dayjs(editedWorkout.date, "MM/DD/YYYY") : null}
-          onChange={(newValue) => {
-            setEditedWorkout({ ...editedWorkout, date: newValue });
-          }}
-          sx={{ marginTop: 1 }}
-        />
-        <Box sx={{ display: "flex", gap: 3 }}>
-          <TextField
-            value={editedWorkout.distance || ""}
-            name="distance"
-            label="Distance (e.g. 1mi)"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            onChange={handleInputChange}
-            sx={{ maxWidth: "300px" }}
-          />
-          <TextField
-            value={editedWorkout.duration || ""}
-            name="duration"
-            label="Time (hh:mm:ss)"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            onChange={handleInputChange}
-            sx={{ maxWidth: "300px" }}
-          />
-        </Box>
-        <TextField
-          value={editedWorkout.details || ""}
-          name="details"
-          label="Details"
-          variant="outlined"
-          multiline
-          margin="normal"
-          fullWidth
-          onChange={handleInputChange}
-        />
-      </DialogContent>
+      {editModalContent(workoutType)}
       <Box sx={{ display: "flex", justifyContent: "right" }}>
         {saveError && <Typography sx={{ color: "red" }}>{saveError}</Typography>}
         <DialogActions>
@@ -414,6 +468,7 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
           setOpen={setOpenEditModal}
           selectedWorkout={selectedWorkout}
           saveWorkout={saveWorkout}
+          workoutType={workoutType}
         />
       )}
     </>
