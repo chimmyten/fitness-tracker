@@ -41,6 +41,18 @@ def delete_workout(id):
     return "Success!"
   else:
     return "Error!"
+  
+@app.route("/workouts/<id>", methods=["PUT", "GET"])
+def update_workout(id):
+  updated_workout = request.json
+  if ('_id' in updated_workout):
+    del updated_workout['_id']
+
+  result = mongo.db.workouts.update_one({'_id': ObjectId(id)}, {'$set': updated_workout})
+  if result.matched_count > 0:
+    return jsonify({"message": "Workout updated successfully"}), 200
+  else:
+    return jsonify({"message": "Workout not found"}), 404
 
 if __name__ == "__main__":
   app.run(port = 8000, debug=True)

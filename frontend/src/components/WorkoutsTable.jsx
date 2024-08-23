@@ -16,7 +16,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { deleteWorkout } from "../api/workoutsApi";
+import { deleteWorkout, updateWorkout } from "../api/workoutsApi";
 import dayjs from "dayjs";
 
 function TableFilters(props) {
@@ -78,7 +78,7 @@ function WorkoutDetails({ selectedWorkout }) {
   );
 }
 
-function EditWorkoutModal({ open, setOpen, selectedWorkout, handleSave }) {
+function EditWorkoutModal({ open, setOpen, selectedWorkout, onSave }) {
   const [editedWorkout, setEditedWorkout] = useState(selectedWorkout);
 
   useEffect(() => {
@@ -96,13 +96,10 @@ function EditWorkoutModal({ open, setOpen, selectedWorkout, handleSave }) {
   const handleClose = () => {
     setOpen(false);
     setEditedWorkout(selectedWorkout);
-  }
+  };
 
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-    >
+    <Dialog open={open} onClose={handleClose}>
       <DialogContent>
         <DatePicker
           name="date"
@@ -147,7 +144,7 @@ function EditWorkoutModal({ open, setOpen, selectedWorkout, handleSave }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleSave} color="primary">
+        <Button onClick={() => {onSave(editedWorkout)}} color="primary">
           Save
         </Button>
       </DialogActions>
@@ -334,6 +331,25 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
     setSelectedWorkout(displayedWorkouts.find((workout) => workout._id === newSelection[0]));
   };
 
+  const handleSave = async (editedWorkout) => {
+    console.log(editedWorkout);
+    const workoutIndex = displayedWorkouts.findIndex((workout) => workout._id === editedWorkout._id);
+
+    if (workoutIndex !== -1) {
+      const updatedWorkouts = [
+        ...displayedWorkouts.slice(0, workoutIndex),
+        editedWorkout,
+        ...displayedWorkouts.slice(workoutIndex + 1),
+      ];
+      console.log(updatedWorkouts);
+      setDisplayedWorkouts(updatedWorkouts);
+      await updateWorkout(editedWorkout)
+    }
+
+
+    setOpenEditModal(false);
+  };
+
   return (
     <>
       {!loadingWorkouts ? (
@@ -371,6 +387,7 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
           open={openEditModal}
           setOpen={setOpenEditModal}
           selectedWorkout={selectedWorkout}
+          onSave={handleSave}
         />
       )}
     </>
