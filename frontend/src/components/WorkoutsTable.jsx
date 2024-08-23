@@ -11,6 +11,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  Typography,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -78,8 +79,9 @@ function WorkoutDetails({ selectedWorkout }) {
   );
 }
 
-function EditWorkoutModal({ open, setOpen, selectedWorkout, onSave }) {
+function EditWorkoutModal({ open, setOpen, selectedWorkout, saveWorkout }) {
   const [editedWorkout, setEditedWorkout] = useState(selectedWorkout);
+  const [saveError, setSaveError] = useState("");
 
   useEffect(() => {
     setEditedWorkout(selectedWorkout);
@@ -96,6 +98,28 @@ function EditWorkoutModal({ open, setOpen, selectedWorkout, onSave }) {
   const handleClose = () => {
     setOpen(false);
     setEditedWorkout(selectedWorkout);
+  };
+
+  const handleSave = () => {
+    if (!editedWorkout.date) {
+      setSaveError("Please enter date");
+      return;
+    }
+
+    const distanceRegex = /^\d+[a-zA-Z]+$/;
+    if (editedWorkout.distance && !distanceRegex.test(editedWorkout.distance)) {
+      setSaveError("Please enter distance with a number followed by units");
+      return;
+    }
+
+    const timeRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+    if (editedWorkout.duration && !timeRegex.test(editedWorkout.duration)) {
+      setSaveError("Please enter time in hh:mm:ss format");
+      return;
+    }
+
+    saveWorkout(editedWorkout);
+    setSaveError("")
   };
 
   return (
@@ -142,12 +166,15 @@ function EditWorkoutModal({ open, setOpen, selectedWorkout, onSave }) {
           onChange={handleInputChange}
         />
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={() => {onSave(editedWorkout)}} color="primary">
-          Save
-        </Button>
-      </DialogActions>
+      <Box sx={{ display: "flex", justifyContent: "right" }}>
+        {saveError && <Typography sx={{ color: "red" }}>{saveError}</Typography>}
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleSave} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Box>
     </Dialog>
   );
 }
@@ -331,7 +358,7 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
     setSelectedWorkout(displayedWorkouts.find((workout) => workout._id === newSelection[0]));
   };
 
-  const handleSave = async (editedWorkout) => {
+  const saveWorkout = async (editedWorkout) => {
     console.log(editedWorkout);
     const workoutIndex = displayedWorkouts.findIndex((workout) => workout._id === editedWorkout._id);
 
@@ -343,9 +370,8 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
       ];
       console.log(updatedWorkouts);
       setDisplayedWorkouts(updatedWorkouts);
-      await updateWorkout(editedWorkout)
+      await updateWorkout(editedWorkout);
     }
-
 
     setOpenEditModal(false);
   };
@@ -387,7 +413,7 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
           open={openEditModal}
           setOpen={setOpenEditModal}
           selectedWorkout={selectedWorkout}
-          onSave={handleSave}
+          saveWorkout={saveWorkout}
         />
       )}
     </>
