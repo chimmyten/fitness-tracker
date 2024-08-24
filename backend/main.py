@@ -68,10 +68,10 @@ def register_user():
   if user:
     return jsonify({"message": "User already exists"}), 400
   
-  hashed_password = bcrypt(password.encode('utf-8'), bcrypt.gensalt())
+  hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
   mongo.db.users.insert_one({"username": username, "password": hashed_password})
-  return jsonify({"message": "User created successfully"})
+  return jsonify({"message": "User created successfully"}), 201
 
 if __name__ == "__main__":
   app.run(port = 8000, debug=True)
