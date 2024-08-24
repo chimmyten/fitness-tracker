@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
 from flask_cors import CORS
 from bson.objectid import ObjectId
+import bcrypt
+import jwt
 
 import os
 from dotenv import load_dotenv, dotenv_values
@@ -53,6 +55,23 @@ def update_workout(id):
     return jsonify({"message": "Workout updated successfully"}), 200
   else:
     return jsonify({"message": "Workout not found"}), 404
+  
+
+### Log in routes
+@app.route("/register", methods=["POST"])
+def register_user():
+  data = request.json
+  username = data.get("username")
+  password = data.get("password")
+
+  user = mongo.db.users.find_one({"username": username})
+  if user:
+    return jsonify({"message": "User already exists"}), 400
+  
+  hashed_password = bcrypt(password.encode('utf-8'), bcrypt.gensalt())
+
+  mongo.db.users.insert_one({"username": username, "password": hashed_password})
+  return jsonify({"message": "User created successfully"})
 
 if __name__ == "__main__":
   app.run(port = 8000, debug=True)
