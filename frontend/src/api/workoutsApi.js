@@ -76,10 +76,25 @@ const updateWorkout = async (updatedWorkout) => {
 
     const data = await response.json(); // Parse the response as JSON
     console.log(`${data.message}`);
-
   } catch (error) {
     console.error(`Failed to update workout ${updatedWorkout._id}: ${error.message}`);
   }
 };
 
-export { fetchWorkouts, postWorkout, deleteWorkout, updateWorkout };
+const createUser = async (user) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    });
+    const data = await response.json();
+    return data.message;
+  } catch (error) {
+    console.error(`Failed to create user: ${error}`);
+  }
+};
+
+export { fetchWorkouts, postWorkout, deleteWorkout, updateWorkout, createUser };
