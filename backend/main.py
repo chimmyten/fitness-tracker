@@ -4,6 +4,7 @@ from flask_cors import CORS
 from bson.objectid import ObjectId
 import bcrypt
 import jwt
+import datetime
 
 import os
 from dotenv import load_dotenv, dotenv_values
@@ -83,7 +84,12 @@ def login():
   user_db = mongo.db.users.find_one({"username": username})
   
   if user_db and bcrypt.checkpw(password, user_db["password"]):
-    return jsonify({"message": "User authenticated"})
+    token = jwt.encode({
+      'userId': str(user_db['_id']),
+      'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=1)
+    }, app.config["SECRET_KEY"], algorithm="HS256")
+
+    return jsonify({"token": token}), 200
   
   return jsonify({"message": "Invalid username/password"})
   
