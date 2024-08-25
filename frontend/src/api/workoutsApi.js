@@ -13,7 +13,7 @@ const fetchWorkouts = async (workoutType) => {
     });
 
     if (response.ok) {
-      console.log(`${workoutType} workouts fetched`);
+      // console.log(`${workoutType} workouts fetched`);
       const data = await response.json();
       return data;
     } else {
@@ -37,7 +37,7 @@ const postWorkout = async (formData) => {
     });
 
     if (response.ok) {
-      console.log("Workout logged successfully");
+      // console.log("Workout logged successfully");
       return true;
     } else {
       console.error(`Submission Error: ${response.statusText}`);
@@ -60,7 +60,7 @@ const deleteWorkout = async (workoutId) => {
     });
 
     if (response.ok) {
-      console.log(`Workout ${workoutId} deleted`);
+      // console.log(`Workout ${workoutId} deleted`);
     } else {
       console.error(`Failed to delete workout ${workoutId}`);
     }
