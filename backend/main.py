@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
 from flask_cors import CORS
 from bson.objectid import ObjectId
+from functools import wraps
 import bcrypt
 import jwt
 import datetime
@@ -21,6 +22,23 @@ mongo = PyMongo(app)
 def mongo_to_json(doc):
   doc['_id'] = str(doc['_id'])
   return doc
+
+def token_required(f):
+  @wraps(f)
+  def validate_token(*args, **kwargs):
+    token = request.headers.get("Authorization")
+
+    if not token:
+      return jsonify({"message": "Missing token"}), 403
+    
+    try:
+      data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
+      current_user = mongo.db.users.find_one({'_id': data['userId']})
+    except Exception as e:
+      return jsonify({"message": "Token missing or expired"}), 403
+    
+    return f(current_user, *args, **kwargs)
+  return validate_token
 
 
 @app.route("/workouts", methods=["GET"])
