@@ -1,8 +1,10 @@
 import { Box, Button, TextField, Paper, Typography } from "@mui/material";
 import { useState } from "react";
 import { createUser, authenticateUser } from "../api/workoutsApi";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
+  const navigate = useNavigate();
   const [returningUser, setReturningUser] = useState(true);
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState("");
@@ -13,7 +15,6 @@ function LoginPage() {
   });
 
   const handleInputChange = (event) => {
-    console.log(formData);
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -57,10 +58,18 @@ function LoginPage() {
 
     const result = await authenticateUser(formData);
 
-    if (result === "Invalid username/password") {
-      setFormError(result);
+    if (result.message) {
+      setFormError(result.message);
+    } else if (result.token) {
+      setFormError("");
+      setFormData({
+        username: "",
+        password: "",
+        passwordConfirm: "",
+      });
+      localStorage.setItem("token", result.token);
+      navigate("/homepage");
     }
-    console.log(result);
   };
 
   return (
