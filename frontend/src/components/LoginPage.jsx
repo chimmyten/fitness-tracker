@@ -125,6 +125,11 @@ function LoginPage() {
                   setReturningUser(!returningUser);
                   setFormSuccess(false);
                   setFormError("");
+                  setFormData({
+                    username: "",
+                    password: "",
+                    passwordConfirm: "",
+                  });
                 }}
               >
                 {returningUser ? "Create an Account" : "Back to Log In"}
