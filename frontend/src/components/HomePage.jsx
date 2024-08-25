@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
-import { Box, Tabs, Tab, Paper } from "@mui/material";
+import { Box, Button, Tabs, Tab, Paper } from "@mui/material";
 import WorkoutForm from "./WorkoutForm";
 import WorkoutsTable from "./WorkoutsTable";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { fetchWorkouts } from "../api/workoutsApi";
+import { useNavigate } from "react-router-dom";
 // import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function HomePage() {
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(0);
   const [loadingWorkouts, setLoadingWorkouts] = useState(true);
   const [workouts, setWorkouts] = useState([]);
@@ -50,11 +52,28 @@ function HomePage() {
     setWorkoutAdded(true);
   };
 
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
     <Box>
       <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ backgroundColor: "#fff" }}>
-        <Box sx={{ fontSize: "2.5rem", fontWeight: "bold", marginTop: 3, marginBottom: 2 }}>Fitness Tracker</Box>
-        <Paper elevation={3} sx={{ display: "inline-flex"}}>
+        <Box
+          sx={{
+            fontSize: "2.5rem",
+            fontWeight: "bold",
+            marginTop: 3,
+            marginBottom: 2,
+          }}
+        >
+          Fitness Tracker
+        </Box>
+        <Button size="large" sx={{ position: "fixed", top: 20, right: 30 }} onClick={handleLogOut}>
+          Log Out
+        </Button>
+        <Paper elevation={3} sx={{ display: "inline-flex" }}>
           <Tabs value={selectedTab} onChange={handleTabChange}>
             <Tab name="type" label="Run" />
             <Tab name="type" label="Weights" />
