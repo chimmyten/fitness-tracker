@@ -7,9 +7,9 @@ const fetchWorkouts = async (workoutType) => {
     const response = await fetch(`http://127.0.0.1:8000/workouts?${queryParamString}`, {
       method: "GET",
       headers: {
-        'Content-Type': "application.json",
-        'Authorization': `Bearer ${localStorage.getItem("token")}`
-      }
+        "Content-Type": "application.json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     });
 
     if (response.ok) {
@@ -17,6 +17,9 @@ const fetchWorkouts = async (workoutType) => {
       const data = await response.json();
       return data;
     } else {
+      if (response.status === 401) {
+        return response.status;
+      }
       console.error(`Error fetching ${workoutType} workouts`);
     }
   } catch (error) {
@@ -31,7 +34,7 @@ const postWorkout = async (formData) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify(formData),
     });
@@ -40,6 +43,9 @@ const postWorkout = async (formData) => {
       // console.log("Workout logged successfully");
       return true;
     } else {
+      if (response.status === 401) {
+        return response.status;
+      }
       console.error(`Submission Error: ${response.statusText}`);
       return false;
     }
@@ -55,13 +61,16 @@ const deleteWorkout = async (workoutId) => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
 
     if (response.ok) {
       // console.log(`Workout ${workoutId} deleted`);
     } else {
+      if (response.status === 401) {
+        return response.status;
+      }
       console.error(`Failed to delete workout ${workoutId}`);
     }
   } catch (error) {
@@ -75,13 +84,17 @@ const updateWorkout = async (updatedWorkout) => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify(updatedWorkout),
     });
     if (!response.ok) {
+      if (response.status === 401) {
+        return response.status
+      } 
       throw new Error(`Failed to update workout: ${response.statusText}`);
     }
+
 
     const data = await response.json(); // Parse the response as JSON
     console.log(`${data.message}`);
@@ -120,6 +133,6 @@ const authenticateUser = async (user) => {
   } catch (error) {
     console.error(`Failed to authenticate user: ${error}`);
   }
-}
+};
 
 export { fetchWorkouts, postWorkout, deleteWorkout, updateWorkout, createUser, authenticateUser };

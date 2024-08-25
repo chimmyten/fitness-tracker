@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import { Box, TextField, Button, Typography, Paper } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { postWorkout } from "../api/workoutsApi";
+import { useNavigate } from "react-router-dom";
 
 export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
+  const navigate = useNavigate();
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState("");
 
@@ -69,10 +71,14 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
 
     const submission = await postWorkout(formData);
 
-    if (submission) {
+    if (submission !== 401) {
       setFormSuccess(true);
       setFormError("");
     } else {
+      if (submission === 401) {
+        alert("Your session has expired. Please log in again.")
+        navigate("/login")
+      }
       setFormSuccess(false);
     }
     handleWorkoutAdded();

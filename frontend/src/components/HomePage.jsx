@@ -37,6 +37,10 @@ function HomePage() {
       setLoadingWorkouts(true);
       try {
         const fetchedWorkouts = await fetchWorkouts(workoutType);
+        if (fetchedWorkouts === 401) {
+          alert("Your session has expired. Please log in again.")
+          navigate("/login");
+        }
         setWorkouts(fetchedWorkouts);
       } catch (error) {
         console.error(`Failed to fetch workouts: ${error}`);
@@ -46,7 +50,7 @@ function HomePage() {
     };
 
     setWorkouts(getWorkouts(workoutTypeMap(selectedTab)));
-  }, [selectedTab, workoutAdded]);
+  }, [selectedTab, workoutAdded, navigate]);
 
   const handleWorkoutAdded = () => {
     setWorkoutAdded(true);

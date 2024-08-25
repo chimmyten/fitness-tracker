@@ -19,6 +19,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { deleteWorkout, updateWorkout } from "../api/workoutsApi";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 function TableFilters(props) {
   const { workoutType, sortDisplayedWorkouts } = props;
@@ -234,6 +235,7 @@ function EditWorkoutModal({ open, setOpen, selectedWorkout, saveWorkout, workout
 }
 
 export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }) {
+  const navigate = useNavigate();
   const [displayedWorkouts, setDisplayedWorkouts] = useState([]);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -287,7 +289,11 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
   };
 
   const handleDelete = async (workoutId) => {
-    await deleteWorkout(workoutId);
+    const result = await deleteWorkout(workoutId);
+    if (result === 401) {
+      alert("Your session has expired. Please log in again");
+      navigate("/login");
+    }
 
     const deleted_index = workouts.findIndex((workout) => workout._id === workoutId);
     if (deleted_index !== -1) {
@@ -424,7 +430,11 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
       ];
       console.log(updatedWorkouts);
       setDisplayedWorkouts(updatedWorkouts);
-      await updateWorkout(editedWorkout);
+      const result = await updateWorkout(editedWorkout);
+      if (result === 401) {
+        alert("Your session has expired. Please log in again.");
+        navigate("/login");
+      }
     }
 
     setOpenEditModal(false);
