@@ -32,14 +32,14 @@ def token_required(f):
     token = request.headers.get("Authorization").replace("Bearer ", "")
 
     if not token:
-      return jsonify({"message": "Missing token"}), 403
+      return jsonify({"message": "Missing token"}), 401
     
     try:
       data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
       current_user = mongo.db.users.find_one({'_id': ObjectId(data['userId'])})
 
     except Exception as e:
-      return jsonify({"message": "Token missing or expired"}), 403
+      return jsonify({"message": "Token missing or expired"}), 401
     
     return f(current_user, *args, **kwargs)
   return validate_token
