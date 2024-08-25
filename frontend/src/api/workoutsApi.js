@@ -4,7 +4,13 @@ const fetchWorkouts = async (workoutType) => {
   });
   const queryParamString = queryParams.toString();
   try {
-    const response = await fetch(`http://127.0.0.1:8000/workouts?${queryParamString}`);
+    const response = await fetch(`http://127.0.0.1:8000/workouts?${queryParamString}`, {
+      method: "GET",
+      headers: {
+        'Content-Type': "application.json",
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+      }
+    });
 
     if (response.ok) {
       console.log(`${workoutType} workouts fetched`);
@@ -25,6 +31,7 @@ const postWorkout = async (formData) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
       },
       body: JSON.stringify(formData),
     });
@@ -107,7 +114,7 @@ const authenticateUser = async (user) => {
       body: JSON.stringify(user),
     });
     const data = await response.json();
-    return data.message;
+    return data;
   } catch (error) {
     console.error(`Failed to authenticate user: ${error}`);
   }

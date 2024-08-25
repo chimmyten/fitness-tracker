@@ -16,24 +16,28 @@ CORS(app)
 load_dotenv()
 
 app.config['MONGO_URI'] = os.getenv("MONGO_DB_URI")
-app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
-mongo = PyMongo(app)
+app.config['SECRET_KEY'] = os.getenv("JWT_SECRET_KEY")
 
+mongo=PyMongo(app)
+
+print(app.config['SECRET_KEY'])
 def mongo_to_json(doc):
   doc['_id'] = str(doc['_id'])
+  doc['user_id'] = str(doc['user_id'])
   return doc
 
 def token_required(f):
   @wraps(f)
   def validate_token(*args, **kwargs):
-    token = request.headers.get("Authorization")
+    token = request.headers.get("Authorization").replace("Bearer ", "")
 
     if not token:
       return jsonify({"message": "Missing token"}), 403
     
     try:
       data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
-      current_user = mongo.db.users.find_one({'_id': data['userId']})
+      current_user = mongo.db.users.find_one({'_id': ObjectId(data['userId'])})
+
     except Exception as e:
       return jsonify({"message": "Token missing or expired"}), 403
     
@@ -42,22 +46,25 @@ def token_required(f):
 
 
 @app.route("/workouts", methods=["GET"])
-def get_workouts():
+@token_required
+def get_workouts(current_user):
   type = request.args.get("type")
   print(f"TYPE: {type}")
-  workouts = mongo.db.workouts.find({"type": type})
+  workouts = mongo.db.workouts.find({"user_id": current_user['_id'], "type": type})
   workouts_list = [mongo_to_json(workout) for workout in workouts]
   return jsonify(workouts_list)
 
 @app.route("/", methods=["POST"])
-def add_workout(): 
+@token_required
+def add_workout(current_user): 
   new_workout = request.json
+  new_workout['user_id'] = current_user['_id']
   result = mongo.db.workouts.insert_one(new_workout)
   return (f"Workout {result.inserted_id} inserted!")
   
 
 @app.route("/<id>", methods=["DELETE"])
-def delete_workout(id):
+def delete_workout(current_user, id):
   result = mongo.db.workouts.delete_one({"_id": ObjectId(id)})
   if (result.deleted_count == 1):
     return "Success!"
@@ -109,7 +116,7 @@ def login():
 
     return jsonify({"token": token}), 200
   
-  return jsonify({"message": "Invalid username/password"})
+  return jsonify({"message": "Invalid username/password"}), 401
   
 
 
