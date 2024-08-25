@@ -55,6 +55,7 @@ const deleteWorkout = async (workoutId) => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
       },
     });
 
@@ -74,6 +75,7 @@ const updateWorkout = async (updatedWorkout) => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
       },
       body: JSON.stringify(updatedWorkout),
     });

@@ -64,20 +64,22 @@ def add_workout(current_user):
   
 
 @app.route("/<id>", methods=["DELETE"])
+@token_required
 def delete_workout(current_user, id):
-  result = mongo.db.workouts.delete_one({"_id": ObjectId(id)})
+  result = mongo.db.workouts.delete_one({"user_id": current_user['_id'], "_id": ObjectId(id)})
   if (result.deleted_count == 1):
     return "Success!"
   else:
     return "Error!"
   
 @app.route("/workouts/<id>", methods=["PUT", "GET"])
-def update_workout(id):
+@token_required
+def update_workout(current_user, id):
   updated_workout = request.json
   if ('_id' in updated_workout):
     del updated_workout['_id']
 
-  result = mongo.db.workouts.update_one({'_id': ObjectId(id)}, {'$set': updated_workout})
+  result = mongo.db.workouts.update_one({"user_id": current_user["_id"], '_id': ObjectId(id)}, {'$set': updated_workout})
   if result.matched_count > 0:
     return jsonify({"message": "Workout updated successfully"}), 200
   else:
