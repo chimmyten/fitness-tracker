@@ -97,4 +97,20 @@ const createUser = async (user) => {
   }
 };
 
-export { fetchWorkouts, postWorkout, deleteWorkout, updateWorkout, createUser };
+const authenticateUser = async (user) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    });
+    const data = await response.json();
+    return data.message;
+  } catch (error) {
+    console.error(`Failed to authenticate user: ${error}`);
+  }
+}
+
+export { fetchWorkouts, postWorkout, deleteWorkout, updateWorkout, createUser, authenticateUser };

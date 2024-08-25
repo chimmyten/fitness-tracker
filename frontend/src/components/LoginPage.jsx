@@ -1,6 +1,6 @@
 import { Box, Button, TextField, Paper, Typography } from "@mui/material";
 import { useState } from "react";
-import { createUser } from "../api/workoutsApi";
+import { createUser, authenticateUser } from "../api/workoutsApi";
 
 function LoginPage() {
   const [returningUser, setReturningUser] = useState(true);
@@ -24,22 +24,22 @@ function LoginPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (!formData.username) {
+      setFormError("Username required");
+      return;
+    }
+    if (!formData.password) {
+      setFormError("Password required");
+      return;
+    }
+
     if (!returningUser) {
-      if (!formData.username) {
-        setFormError("Username required");
-        return;
-      }
-      if (!formData.password) {
-        setFormError("Password required");
-        return;
-      }
       if (formData.password !== formData.passwordConfirm) {
         setFormError("Passwords do not match");
         return;
       }
 
       const result = await createUser(formData);
-      console.log(result);
 
       if (result === "User created successfully") {
         setFormSuccess(true);
@@ -52,7 +52,15 @@ function LoginPage() {
       } else {
         setFormError(result);
       }
+      return;
     }
+
+    const result = await authenticateUser(formData);
+
+    if (result === "Invalid username/password") {
+      setFormError(result);
+    }
+    console.log(result);
   };
 
   return (
