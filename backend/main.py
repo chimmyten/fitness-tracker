@@ -14,6 +14,7 @@ CORS(app)
 load_dotenv()
 
 app.config['MONGO_URI'] = os.getenv("MONGO_DB_URI")
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 mongo = PyMongo(app)
 
 def mongo_to_json(doc):
@@ -72,6 +73,21 @@ def register_user():
 
   mongo.db.users.insert_one({"username": username, "password": hashed_password})
   return jsonify({"message": "User created successfully"}), 201
+
+@app.route("/login", methods=["POST"])
+def login():
+  user_data = request.json
+  username = user_data.get("username")
+  password = user_data.get("password").encode('utf-8')
+
+  user_db = mongo.db.users.find_one({"username": username})
+  
+  if user_db and bcrypt.checkpw(password, user_db["password"]):
+    return jsonify({"message": "User authenticated"})
+  
+  return jsonify({"message": "Invalid username/password"})
+  
+
 
 if __name__ == "__main__":
   app.run(port = 8000, debug=True)
