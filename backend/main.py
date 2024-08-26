@@ -76,6 +76,7 @@ def delete_workout(current_user, id):
 @token_required
 def update_workout(current_user, id):
   updated_workout = request.json
+  updated_workout['user_id'] = ObjectId(updated_workout['user_id'])
   if ('_id' in updated_workout):
     del updated_workout['_id']
 
