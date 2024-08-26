@@ -33,15 +33,14 @@ function HomePage({ setIsAuthenticated }) {
   };
 
   useEffect(() => {
-
     const getWorkouts = async (workoutType) => {
       setLoadingWorkouts(true);
       try {
         const fetchedWorkouts = await fetchWorkouts(workoutType);
         if (fetchedWorkouts === 401) {
-          alert("Your session has expired. Please log in again.")
-          localStorage.removeItem("token")
-          setIsAuthenticated(false)
+          alert("Your session has expired. Please log in again.");
+          localStorage.removeItem("token");
+          setIsAuthenticated(false);
           navigate("/login");
         }
         setWorkouts(fetchedWorkouts);
@@ -78,7 +77,13 @@ function HomePage({ setIsAuthenticated }) {
         >
           Fitness Tracker
         </Box>
-        <Button size="large" sx={{ position: "fixed", top: 20, right: 30 }} onClick={handleLogOut}>
+        <Button
+          variant="outlined"
+          size="large"
+          sx={{ position: "absolute", top: 30, right: 40 }}
+          onClick={handleLogOut}
+          className="log-out-button"
+        >
           Log Out
         </Button>
         <Paper elevation={3} sx={{ display: "inline-flex" }}>
@@ -87,7 +92,11 @@ function HomePage({ setIsAuthenticated }) {
             <Tab name="type" label="Weights" />
           </Tabs>
         </Paper>
-        <WorkoutForm selectedTab={selectedTab} handleWorkoutAdded={handleWorkoutAdded} setIsAuthenticated={setIsAuthenticated}/>
+        <WorkoutForm
+          selectedTab={selectedTab}
+          handleWorkoutAdded={handleWorkoutAdded}
+          setIsAuthenticated={setIsAuthenticated}
+        />
         <Box>
           <Box sx={{ fontSize: "1.8rem", marginBottom: 2, textAlign: "center" }}>
             {workoutTypeMap(selectedTab)} Workouts

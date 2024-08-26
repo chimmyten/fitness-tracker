@@ -3,9 +3,6 @@ import {
   Box,
   IconButton,
   Paper,
-  Select,
-  FormControl,
-  MenuItem,
   TextField,
   Button,
   Dialog,
@@ -21,59 +18,63 @@ import { deleteWorkout, updateWorkout } from "../api/workoutsApi";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
-function TableFilters(props) {
-  const { workoutType, sortDisplayedWorkouts } = props;
-  const [sortCriteria, setSortCriteria] = useState("");
+// function TableFilters(props) {
+//   const { workoutType, sortDisplayedWorkouts } = props;
+//   const [sortCriteria, setSortCriteria] = useState("");
 
-  const menuOptions = {
-    Run: [
-      { value: "distance desc", label: "Distance \u2193" },
-      { value: "distance asc", label: "Distance \u2191" },
-      { value: "duration desc", label: "Duration \u2193" },
-      { value: "duration asc", label: "Duration \u2191" },
-    ],
-    Weights: [
-      { value: "duration desc", label: "Duration \u2193" },
-      { value: "duration asc", label: "Duration \u2191" },
-    ],
-  };
+//   const menuOptions = {
+//     Run: [
+//       { value: "distance desc", label: "Distance \u2193" },
+//       { value: "distance asc", label: "Distance \u2191" },
+//       { value: "duration desc", label: "Duration \u2193" },
+//       { value: "duration asc", label: "Duration \u2191" },
+//     ],
+//     Weights: [
+//       { value: "duration desc", label: "Duration \u2193" },
+//       { value: "duration asc", label: "Duration \u2191" },
+//     ],
+//   };
 
-  const menuItems = menuOptions[workoutType] || [];
-  const handleSortChange = (event) => {
-    const sortValue = event.target.value;
-    setSortCriteria(sortValue);
-    const field = sortValue.split(" ")[0];
-    const order = sortValue.split(" ")[1];
-    sortDisplayedWorkouts(field, order);
-  };
+//   const menuItems = menuOptions[workoutType] || [];
+//   const handleSortChange = (event) => {
+//     const sortValue = event.target.value;
+//     setSortCriteria(sortValue);
+//     const field = sortValue.split(" ")[0];
+//     const order = sortValue.split(" ")[1];
+//     sortDisplayedWorkouts(field, order);
+//   };
 
-  return (
-    <Box component={Paper} sx={{ minWidth: "150px", maxHeight: "75px", padding: 2 }}>
-      <FormControl sx={{ display: "flex" }}>
-        <Box fontSize="15px">Sort By</Box>
-        <Select value={sortCriteria} onChange={handleSortChange} sx={{ fontSize: "15px" }}>
-          <MenuItem value="date desc" sx={{ fontSize: "15px" }}>
-            Date &darr;
-          </MenuItem>
-          <MenuItem value="date asc" sx={{ fontSize: "15px" }}>
-            Date &uarr;
-          </MenuItem>
-          {menuItems.map((option) => {
-            return (
-              <MenuItem key={option.value} value={option.value} sx={{ fontSize: "15px" }}>
-                {option.label}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
-    </Box>
-  );
-}
+//   return (
+//     <Box component={Paper} sx={{ minWidth: "150px", maxHeight: "75px", padding: 2 }}>
+//       <FormControl sx={{ display: "flex" }}>
+//         <Box fontSize="15px">Sort By</Box>
+//         <Select value={sortCriteria} onChange={handleSortChange} sx={{ fontSize: "15px" }}>
+//           <MenuItem value="date desc" sx={{ fontSize: "15px" }}>
+//             Date &darr;
+//           </MenuItem>
+//           <MenuItem value="date asc" sx={{ fontSize: "15px" }}>
+//             Date &uarr;
+//           </MenuItem>
+//           {menuItems.map((option) => {
+//             return (
+//               <MenuItem key={option.value} value={option.value} sx={{ fontSize: "15px" }}>
+//                 {option.label}
+//               </MenuItem>
+//             );
+//           })}
+//         </Select>
+//       </FormControl>
+//     </Box>
+//   );
+// }
 
 function WorkoutDetails({ selectedWorkout }) {
   return (
-    <Box component={Paper} sx={{ minWidth: "150px", maxWidth: "250px", maxHeight: "75px", padding: 2 }}>
+    <Box
+      component={Paper}
+      sx={{ minWidth: "150px", maxWidth: "250px", maxHeight: "75px", padding: 2 }}
+      className="workout-details"
+    >
       <Box sx={{ fontWeight: "bold" }}>Details:</Box>
       <Box sx={{ whiteSpace: "pre-line" }}>{selectedWorkout.details}</Box>
     </Box>
@@ -252,37 +253,37 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts, 
     setSelectedWorkout(null);
   }, [workoutType]);
 
-  const extractNumeric = (str) => {
-    const match = str.match(/^(\d+)(.*)$/);
-    let numeric = match ? match[1] : 0;
-    const units = match ? match[2] : "";
-    numeric = units === "hr" ? numeric * 60 : numeric;
-    return numeric;
-  };
+  // const extractNumeric = (str) => {
+  //   const match = str.match(/^(\d+)(.*)$/);
+  //   let numeric = match ? match[1] : 0;
+  //   const units = match ? match[2] : "";
+  //   numeric = units === "hr" ? numeric * 60 : numeric;
+  //   return numeric;
+  // };
 
-  const sortDisplayedWorkouts = (field, order) => {
-    const updatedWorkouts = [...displayedWorkouts];
+  // const sortDisplayedWorkouts = (field, order) => {
+  //   const updatedWorkouts = [...displayedWorkouts];
 
-    if (field === "date") {
-      updatedWorkouts.sort((a, b) => {
-        if (order === "asc") {
-          return new Date(a[field]) - new Date(b[field]);
-        } else {
-          return new Date(b[field]) - new Date(a[field]);
-        }
-      });
-    } else {
-      updatedWorkouts.sort((a, b) => {
-        if (order === "asc") {
-          return extractNumeric(a[field]) - extractNumeric(b[field]);
-        } else {
-          return extractNumeric(a[field]) - extractNumeric(b[field]);
-        }
-      });
-    }
+  //   if (field === "date") {
+  //     updatedWorkouts.sort((a, b) => {
+  //       if (order === "asc") {
+  //         return new Date(a[field]) - new Date(b[field]);
+  //       } else {
+  //         return new Date(b[field]) - new Date(a[field]);
+  //       }
+  //     });
+  //   } else {
+  //     updatedWorkouts.sort((a, b) => {
+  //       if (order === "asc") {
+  //         return extractNumeric(a[field]) - extractNumeric(b[field]);
+  //       } else {
+  //         return extractNumeric(a[field]) - extractNumeric(b[field]);
+  //       }
+  //     });
+  //   }
 
-    setDisplayedWorkouts(updatedWorkouts);
-  };
+  //   setDisplayedWorkouts(updatedWorkouts);
+  // };
 
   const handleEdit = () => {
     setOpenEditModal(true);
@@ -292,7 +293,7 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts, 
     const result = await deleteWorkout(workoutId);
     if (result === 401) {
       alert("Your session has expired. Please log in again");
-      localStorage.removeItem("token")
+      localStorage.removeItem("token");
       setIsAuthenticated(false);
       navigate("/login");
     }
@@ -435,7 +436,7 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts, 
       const result = await updateWorkout(editedWorkout);
       if (result === 401) {
         alert("Your session has expired. Please log in again.");
-        localStorage.removeItem("token")
+        localStorage.removeItem("token");
         setIsAuthenticated(false);
         navigate("/login");
       }
@@ -447,9 +448,9 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts, 
   return (
     <>
       {!loadingWorkouts ? (
-        <Box sx={{ display: "flex", gap: 2 }}>
-          <Box sx={{ display: "flex", gap: 2, flexDirection: "column" }}>
-            <TableFilters workoutType={workoutType} sortDisplayedWorkouts={sortDisplayedWorkouts} />
+        <Box sx={{ display: "flex", gap: 2 }} className="workouts-table-container">
+          <Box sx={{ display: "flex", gap: 2, flexDirection: "column" }} className="details-container">
+            {/* <TableFilters workoutType={workoutType} sortDisplayedWorkouts={sortDisplayedWorkouts} /> */}
             {selectedWorkout !== null && selectedWorkout !== undefined && (
               <WorkoutDetails selectedWorkout={selectedWorkout} />
             )}
