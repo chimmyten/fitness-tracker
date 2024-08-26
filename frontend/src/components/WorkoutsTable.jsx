@@ -234,7 +234,7 @@ function EditWorkoutModal({ open, setOpen, selectedWorkout, saveWorkout, workout
   );
 }
 
-export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }) {
+export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts, setIsAuthenticated }) {
   const navigate = useNavigate();
   const [displayedWorkouts, setDisplayedWorkouts] = useState([]);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
@@ -292,6 +292,8 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
     const result = await deleteWorkout(workoutId);
     if (result === 401) {
       alert("Your session has expired. Please log in again");
+      localStorage.removeItem("token")
+      setIsAuthenticated(false);
       navigate("/login");
     }
 
@@ -433,6 +435,8 @@ export default function WorkoutsTable({ workouts, workoutType, loadingWorkouts }
       const result = await updateWorkout(editedWorkout);
       if (result === 401) {
         alert("Your session has expired. Please log in again.");
+        localStorage.removeItem("token")
+        setIsAuthenticated(false);
         navigate("/login");
       }
     }

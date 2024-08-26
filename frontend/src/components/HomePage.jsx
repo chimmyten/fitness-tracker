@@ -8,7 +8,7 @@ import { fetchWorkouts } from "../api/workoutsApi";
 import { useNavigate } from "react-router-dom";
 // import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-function HomePage() {
+function HomePage({ setIsAuthenticated }) {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(0);
   const [loadingWorkouts, setLoadingWorkouts] = useState(true);
@@ -33,12 +33,15 @@ function HomePage() {
   };
 
   useEffect(() => {
+
     const getWorkouts = async (workoutType) => {
       setLoadingWorkouts(true);
       try {
         const fetchedWorkouts = await fetchWorkouts(workoutType);
         if (fetchedWorkouts === 401) {
           alert("Your session has expired. Please log in again.")
+          localStorage.removeItem("token")
+          setIsAuthenticated(false)
           navigate("/login");
         }
         setWorkouts(fetchedWorkouts);
@@ -49,8 +52,8 @@ function HomePage() {
       setWorkoutAdded(false);
     };
 
-    setWorkouts(getWorkouts(workoutTypeMap(selectedTab)));
-  }, [selectedTab, workoutAdded, navigate]);
+    getWorkouts(workoutTypeMap(selectedTab));
+  }, [selectedTab, workoutAdded, navigate, setIsAuthenticated]);
 
   const handleWorkoutAdded = () => {
     setWorkoutAdded(true);
@@ -58,6 +61,7 @@ function HomePage() {
 
   const handleLogOut = () => {
     localStorage.removeItem("token");
+    setIsAuthenticated(false);
     navigate("/login");
   };
 
@@ -83,7 +87,7 @@ function HomePage() {
             <Tab name="type" label="Weights" />
           </Tabs>
         </Paper>
-        <WorkoutForm selectedTab={selectedTab} handleWorkoutAdded={handleWorkoutAdded} />
+        <WorkoutForm selectedTab={selectedTab} handleWorkoutAdded={handleWorkoutAdded} setIsAuthenticated={setIsAuthenticated}/>
         <Box>
           <Box sx={{ fontSize: "1.8rem", marginBottom: 2, textAlign: "center" }}>
             {workoutTypeMap(selectedTab)} Workouts
@@ -92,6 +96,7 @@ function HomePage() {
             workouts={workouts}
             workoutType={workoutTypeMap(selectedTab)}
             loadingWorkouts={loadingWorkouts}
+            setIsAuthenticated={setIsAuthenticated}
           />
         </Box>
       </LocalizationProvider>

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { createUser, authenticateUser } from "../api/workoutsApi";
 import { useNavigate } from "react-router-dom";
 
-function LoginPage() {
+function LoginPage({ setIsAuthenticated }) {
   const navigate = useNavigate();
   const [returningUser, setReturningUser] = useState(true);
   const [formSuccess, setFormSuccess] = useState(false);
@@ -68,7 +68,8 @@ function LoginPage() {
         passwordConfirm: "",
       });
       localStorage.setItem("token", result.token);
-      navigate("/homepage");
+      setIsAuthenticated(true);
+      navigate("/");
     }
   };
 
@@ -115,7 +116,7 @@ function LoginPage() {
             {formSuccess && <Typography sx={{ color: "green" }}>User created successfully</Typography>}
             {formError && <Typography sx={{ color: "red" }}>{formError}</Typography>}
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 1.5 }}>
+              <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 1.5 }} onClick={handleSubmit}>
                 {returningUser ? "Log In" : "Register"}
               </Button>
               <Button

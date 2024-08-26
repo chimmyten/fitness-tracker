@@ -4,7 +4,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { postWorkout } from "../api/workoutsApi";
 import { useNavigate } from "react-router-dom";
 
-export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
+export default function WorkoutForm({ selectedTab, handleWorkoutAdded, setIsAuthenticated }) {
   const navigate = useNavigate();
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState("");
@@ -76,8 +76,10 @@ export default function WorkoutForm({ selectedTab, handleWorkoutAdded }) {
       setFormError("");
     } else {
       if (submission === 401) {
-        alert("Your session has expired. Please log in again.")
-        navigate("/login")
+        alert("Your session has expired. Please log in again.");
+        localStorage.removeItem("token");
+        setIsAuthenticated(false);
+        navigate("/login");
       }
       setFormSuccess(false);
     }
