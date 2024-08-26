@@ -108,6 +108,27 @@ function HomePage({ setIsAuthenticated }) {
             setIsAuthenticated={setIsAuthenticated}
           />
         </Box>
+        <Box
+          sx={{
+            fontSize: "12px",
+            color: "gray",
+            textDecoration: "none",
+            textAlign: "center",
+            position: "absolute",
+            bottom: 10,
+            width: "100%",
+            paddingBottom: 5,
+          }}
+        >
+          <a
+            href="https://github.com/chimmyten"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "gray" }}
+          >
+            github.com/chimmyten
+          </a>
+        </Box>
       </LocalizationProvider>
     </Box>
   );
