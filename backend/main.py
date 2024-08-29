@@ -18,9 +18,8 @@ load_dotenv()
 app.config['MONGO_URI'] = os.getenv("MONGO_DB_URI")
 app.config['SECRET_KEY'] = os.getenv("JWT_SECRET_KEY")
 
-mongo=PyMongo(app)
+mongo = PyMongo(app)
 
-print(app.config['SECRET_KEY'])
 def mongo_to_json(doc):
   doc['_id'] = str(doc['_id'])
   doc['user_id'] = str(doc['user_id'])
