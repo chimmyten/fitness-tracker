@@ -8,5 +8,5 @@ export default defineConfig({
   resolve: {
     dedupe: ['@emotion/react']
   },
-  base: "/fitness-tracker/"
+  base: "./"
 })
