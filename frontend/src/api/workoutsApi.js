@@ -4,7 +4,7 @@ const fetchWorkouts = async (workoutType) => {
   });
   const queryParamString = queryParams.toString();
   try {
-    const response = await fetch(`http://127.0.0.1:8000/workouts?${queryParamString}`, {
+    const response = await fetch(`https://fitness-tracker-t8gk.onrender.com/workouts?${queryParamString}`, {
       method: "GET",
       headers: {
         "Content-Type": "application.json",
@@ -30,7 +30,7 @@ const fetchWorkouts = async (workoutType) => {
 const postWorkout = async (formData) => {
   formData.date = formData.date !== null ? formData.date.format("MM/DD/YYYY") : "";
   try {
-    const response = await fetch("http://127.0.0.1:8000/", {
+    const response = await fetch("https://fitness-tracker-t8gk.onrender.com/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +57,7 @@ const postWorkout = async (formData) => {
 
 const deleteWorkout = async (workoutId) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/${workoutId}`, {
+    const response = await fetch(`https://fitness-tracker-t8gk.onrender.com/${workoutId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -80,7 +80,7 @@ const deleteWorkout = async (workoutId) => {
 
 const updateWorkout = async (updatedWorkout) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/workouts/${updatedWorkout._id}`, {
+    const response = await fetch(`https://fitness-tracker-t8gk.onrender.com/workouts/${updatedWorkout._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -105,7 +105,7 @@ const updateWorkout = async (updatedWorkout) => {
 
 const createUser = async (user) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/register`, {
+    const response = await fetch(`https://fitness-tracker-t8gk.onrender.com/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -121,7 +121,7 @@ const createUser = async (user) => {
 
 const authenticateUser = async (user) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/login`, {
+    const response = await fetch(`https://fitness-tracker-t8gk.onrender.com/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
