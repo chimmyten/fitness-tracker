@@ -121,7 +121,3 @@ def login():
   
   return jsonify({"message": "Invalid username/password"}), 401
   
-
-
-if __name__ == "__main__":
-  app.run(port = 8000, debug=True)
