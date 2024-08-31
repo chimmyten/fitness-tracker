@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./frontend/dist  # Set default working directory for all steps
+        working-directory: ./frontend/  # Set default working directory for all steps
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,8 +39,10 @@ jobs:
           node-version: 20
           cache-dependency-path: './frontend/package-lock.json'
       - name: Install dependencies
+        working-directory: ./frontend  # Set the working directory for this step
         run: npm ci
       - name: Build
+        working-directory: ./frontend  # Set the working directory for this step
         run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v4
