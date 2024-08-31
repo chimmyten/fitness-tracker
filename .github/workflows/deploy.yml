@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./frontend/  # Set default working directory for all steps
+        working-directory: ./frontend/dist  # Set default working directory for all steps
     steps:
       - name: Checkout
         uses: actions/checkout@v4
