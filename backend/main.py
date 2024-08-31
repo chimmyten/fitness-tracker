@@ -109,15 +109,19 @@ def login():
   username = user_data.get("username")
   password = user_data.get("password").encode('utf-8')
 
-  user_db = db['users'].find_one({"username": username})
-  
-  if user_db and bcrypt.checkpw(password, user_db["password"]):
-    token = jwt.encode({
-      'userId': str(user_db['_id']),
-      'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=1)
-    }, app.config["SECRET_KEY"], algorithm="HS256")
+  try:
+    user_db = db['users'].find_one({"username": username})
+    
+    if user_db and bcrypt.checkpw(password, user_db["password"]):
+      token = jwt.encode({
+        'userId': str(user_db['_id']),
+        'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=1)
+      }, app.config["SECRET_KEY"], algorithm="HS256")
 
-    return jsonify({"token": token}), 200
+      return jsonify({"token": token}), 200
+    
+    return jsonify({"message": "Invalid username/password"}), 401
   
-  return jsonify({"message": "Invalid username/password"}), 401
+  except Exception as e:
+    print(e)
   
