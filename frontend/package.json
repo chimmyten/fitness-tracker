@@ -17,6 +17,7 @@
     "@emotion/styled": "^11.13.0",
     "@mui/lab": "^5.0.0-alpha.173",
     "@mui/material": "^5.16.6",
+    "@mui/x-data-grid": "^7.15.0",
     "@mui/x-date-pickers": "^7.12.0",
     "day": "^0.0.2",
     "dayjs": "^1.11.12",
