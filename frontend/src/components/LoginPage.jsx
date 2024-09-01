@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Paper, Typography } from "@mui/material";
+import { Box, Button, TextField, Paper, Typography, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { createUser, authenticateUser } from "../api/workoutsApi";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ function LoginPage({ setIsAuthenticated }) {
     password: "",
     passwordConfirm: "",
   });
+  const [logInProgress, setLogInProgress] = useState(false);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -24,6 +25,8 @@ function LoginPage({ setIsAuthenticated }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    setLogInProgress(true);
 
     if (!formData.username) {
       setFormError("Username required");
@@ -81,11 +84,10 @@ function LoginPage({ setIsAuthenticated }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "start",
-          minHeight: "40vh",
           position: "relative",
         }}
       >
-        <Box component={Paper} sx={{ padding: 2, marginTop: 12 }}>
+        <Box component={Paper} sx={{ padding: 2, marginTop: 12, width: 400 }}>
           <h2>{returningUser ? "Log In" : "Register"}</h2>
           <form onSubmit={handleSubmit}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -115,10 +117,20 @@ function LoginPage({ setIsAuthenticated }) {
             </Box>
             {formSuccess && <Typography sx={{ color: "green" }}>User created successfully</Typography>}
             {formError && <Typography sx={{ color: "red" }}>{formError}</Typography>}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 1.5 }} onClick={handleSubmit}>
-                {returningUser ? "Log In" : "Register"}
-              </Button>
+
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1}}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  sx={{ marginTop: 1.5 }}
+                  onClick={handleSubmit}
+                >
+                  {returningUser ? "Log In" : "Register"}
+                </Button>
+                {logInProgress && <CircularProgress size={25} sx={{ marginTop: 1.5 }}/>}
+              </Box>
               <Button
                 size="small"
                 sx={{ marginTop: 1.5 }}
@@ -139,7 +151,7 @@ function LoginPage({ setIsAuthenticated }) {
           </form>
         </Box>
       </Box>
-      <Box sx={{ fontSize: 14, textAlign: "center" }}>
+      <Box sx={{ fontSize: 14, textAlign: "center", marginTop: 3 }}>
         Log in may take longer than expected if server is restarting.
       </Box>
       <Box
