@@ -114,7 +114,7 @@ function HomePage({ setIsAuthenticated }) {
             color: "gray",
             textDecoration: "none",
             textAlign: "center",
-            position: "absolute",
+            position: "fixed",
             bottom: 10,
             width: "100%",
             paddingBottom: 5,

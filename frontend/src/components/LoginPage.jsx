@@ -81,7 +81,7 @@ function LoginPage({ setIsAuthenticated }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "start",
-          minHeight: "100vh",
+          minHeight: "40vh",
           position: "relative",
         }}
       >
@@ -139,13 +139,16 @@ function LoginPage({ setIsAuthenticated }) {
           </form>
         </Box>
       </Box>
+      <Box sx={{ fontSize: 14, textAlign: "center" }}>
+        Log in may take longer than expected if server is restarting.
+      </Box>
       <Box
         sx={{
           fontSize: "12px",
           color: "gray",
           textDecoration: "none",
           textAlign: "center",
-          position: "absolute",
+          position: "fixed",
           bottom: 10,
           width: "100%",
           paddingBottom: 5,
