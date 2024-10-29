@@ -30,16 +30,19 @@ function LoginPage({ setIsAuthenticated }) {
 
     if (!formData.username) {
       setFormError("Username required");
+      setLogInProgress(false);
       return;
     }
     if (!formData.password) {
       setFormError("Password required");
+      setLogInProgress(false);
       return;
     }
 
     if (!returningUser) {
       if (formData.password !== formData.passwordConfirm) {
         setFormError("Passwords do not match");
+        setLogInProgress(false);
         return;
       }
 
@@ -53,8 +56,10 @@ function LoginPage({ setIsAuthenticated }) {
           password: "",
           passwordConfirm: "",
         });
+        setLogInProgress(false);
       } else {
         setFormError(result);
+        setLogInProgress(false);
       }
       return;
     }
@@ -63,6 +68,7 @@ function LoginPage({ setIsAuthenticated }) {
 
     if (result.message) {
       setFormError(result.message);
+      setLogInProgress(false);
     } else if (result.token) {
       setFormError("");
       setFormData({
@@ -70,6 +76,7 @@ function LoginPage({ setIsAuthenticated }) {
         password: "",
         passwordConfirm: "",
       });
+      setLogInProgress(false);
       localStorage.setItem("token", result.token);
       setIsAuthenticated(true);
       navigate("/");
@@ -119,7 +126,7 @@ function LoginPage({ setIsAuthenticated }) {
             {formError && <Typography sx={{ color: "red" }}>{formError}</Typography>}
 
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1}}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Button
                   type="submit"
                   variant="contained"
@@ -129,7 +136,7 @@ function LoginPage({ setIsAuthenticated }) {
                 >
                   {returningUser ? "Log In" : "Register"}
                 </Button>
-                {logInProgress && <CircularProgress size={25} sx={{ marginTop: 1.5 }}/>}
+                {logInProgress && <CircularProgress size={25} sx={{ marginTop: 1.5 }} />}
               </Box>
               <Button
                 size="small"
